@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MapTrifold, Flame, Ticket, Ranking, User, GearSix, Plus } from "@phosphor-icons/react";
+import { MapTrifold, Flame, Ticket, Ranking, User, Plus } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { ArtopLogo } from "./Logo";
 
@@ -61,28 +61,17 @@ export function SideNav({ onNavigate }: { onNavigate?: () => void }) {
           );
         })}
       </ul>
-      <div className="mt-4 border-t border-[var(--color-border)] pt-4">
-        <p className="px-4 pb-2 text-[12px] font-extrabold uppercase tracking-[0.12em] text-[var(--color-text-3)]">Ajustes</p>
-        <Link
-          href="/perfil?tab=config"
-          className={cn(
-            "artop-press flex min-h-[52px] items-center gap-3.5 rounded-[16px] border-2 border-transparent px-4 text-[15px] font-display font-bold",
-            pathname.includes("config")
-              ? "bg-[var(--color-surface-3)] text-[var(--color-text)] border-[var(--color-border)]"
-              : "text-[var(--color-text-2)] hover:bg-[var(--color-surface-3)] hover:text-[var(--color-text)]"
-          )}
-        >
-          <GearSix size={22} weight="bold" aria-hidden />
-          Configuración
-        </Link>
-      </div>
       <div className="mt-auto px-2">
         <div className="rounded-[20px] border-2 border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-          <p className="font-display text-[15px] font-extrabold leading-tight">Crea tu curso con IA</p>
-          <p className="mt-1 text-[13px] font-medium leading-snug text-[var(--color-text-2)]">Dime qué quieres aprender. Yo construyo el camino.</p>
-          <span className="mt-3 flex min-h-[44px] items-center justify-center gap-1.5 rounded-[12px] bg-[var(--color-brand)] text-[14px] font-display font-extrabold text-white">
-            <Plus size={16} weight="bold" /> Nuevo curso
-          </span>
+          <p className="font-display text-[15px] font-extrabold leading-tight">Probar generación demo</p>
+          <p className="mt-1 text-[13px] font-medium leading-snug text-[var(--color-text-2)]">Todavía no hay generador de IA real. Podés ver la demo de cómo se verá crear un curso.</p>
+          <Link
+            href="/camino?nuevo=1"
+            onClick={onNavigate}
+            className="mt-3 flex min-h-[44px] items-center justify-center gap-1.5 rounded-[12px] bg-[var(--color-brand)] text-[14px] font-display font-extrabold text-white artop-press"
+          >
+            <Plus size={16} weight="bold" aria-hidden /> Nuevo curso
+          </Link>
         </div>
       </div>
     </nav>
