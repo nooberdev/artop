@@ -63,8 +63,8 @@ export function SideNav({ onNavigate }: { onNavigate?: () => void }) {
       </ul>
       <div className="mt-auto px-2">
         <div className="rounded-[20px] border-2 border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-          <p className="font-display text-[15px] font-extrabold leading-tight">Crea tu curso con IA</p>
-          <p className="mt-1 text-[13px] font-medium leading-snug text-[var(--color-text-2)]">Dime qué quieres aprender. Yo construyo el camino.</p>
+          <p className="font-display text-[15px] font-extrabold leading-tight">Probar generación demo</p>
+          <p className="mt-1 text-[13px] font-medium leading-snug text-[var(--color-text-2)]">Todavía no hay generador de IA real. Podés ver la demo de cómo se verá crear un curso.</p>
           <Link
             href="/camino?nuevo=1"
             onClick={onNavigate}
