@@ -67,10 +67,7 @@ export function CaminoAside() {
       <Card aria-label="Misiones del día" className="rounded-[22px]!">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-[17px] font-extrabold">Misiones del día</h2>
-          <span className="text-[12px] font-extrabold uppercase tracking-wide text-[var(--color-brand-ink)]">
-            Ver todo
-          </span>
-        </div>
+</div>
         <ul className="mt-4 flex flex-col gap-4">
           {caminoQuests.map((q) => (
             <li key={q.id} className="flex items-center gap-3">
