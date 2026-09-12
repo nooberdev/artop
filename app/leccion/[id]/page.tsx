@@ -99,18 +99,75 @@ export default function LeccionPage() {
 
   const exercises = useMemo(() => (found ? bank(found.node.title) : []), [found]);
   const total = exercises.length;
+  const lessonKey = found ? `artop-lesson-progress:${found.node.id}` : null;
 
-  const [step, setStep] = useState(0); // 0 = intro, 1..5 ejercicios, 6 = resultado
+  const [step, setStep] = useState(() => {
+    if (typeof window === "undefined" || !found) return 0;
+    try {
+      const raw = sessionStorage.getItem(`artop-lesson-progress:${found.node.id}`);
+      if (!raw) return 0;
+      const data = JSON.parse(raw) as { step?: number };
+      const n = typeof data.step === "number" ? data.step : 0;
+      return n > 0 ? n : 0;
+    } catch {
+      return 0;
+    }
+  }); // 0 = intro, 1..N ejercicios, N+1 = resultado
   const [sel, setSel] = useState<unknown>(null);
   const [checked, setChecked] = useState(false);
   const [ok, setOk] = useState(false);
-  const [hits, setHits] = useState(0);
+  const [hits, setHits] = useState(() => {
+    if (typeof window === "undefined" || !found) return 0;
+    try {
+      const raw = sessionStorage.getItem(`artop-lesson-progress:${found.node.id}`);
+      if (!raw) return 0;
+      const data = JSON.parse(raw) as { hits?: number };
+      return typeof data.hits === "number" ? data.hits : 0;
+    } catch {
+      return 0;
+    }
+  });
   const saved = useRef(false);
+  const [ready, setReady] = useState(false);
 
   if (!found) notFound();
   const { node, unit } = found;
   const ex = step >= 1 && step <= total ? exercises[step - 1] : null;
   const xpTotal = node.xp;
+
+  // Marca restored + clamp si el banco cambió; no pisa progreso válido.
+  useEffect(() => {
+    if (!lessonKey) return;
+    try {
+      const raw = sessionStorage.getItem(lessonKey);
+      if (raw) {
+        const data = JSON.parse(raw) as { step?: number; hits?: number; saved?: boolean };
+        if (typeof data.step === "number" && data.step > total + 1) {
+          setStep(0);
+          setHits(0);
+          sessionStorage.removeItem(lessonKey);
+        } else {
+          saved.current = Boolean(data.saved) || data.step === total + 1;
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    setReady(true);
+  }, [lessonKey, total]);
+
+  useEffect(() => {
+    if (!ready || !lessonKey) return;
+    try {
+      if (step === 0) {
+        sessionStorage.removeItem(lessonKey);
+      } else {
+        sessionStorage.setItem(lessonKey, JSON.stringify({ step, hits, saved: saved.current }));
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [ready, lessonKey, step, hits]);
 
   useEffect(() => {
     if (step === total + 1 && !saved.current) {
@@ -118,8 +175,15 @@ export default function LeccionPage() {
       const earned = Math.max(2, Math.round((xpTotal * hits) / total));
       completeLesson(node.id, earned);
       if (hits === total) earnGems(2);
+      if (lessonKey) {
+        try {
+          sessionStorage.setItem(lessonKey, JSON.stringify({ step, hits, saved: true }));
+        } catch {
+          /* ignore */
+        }
+      }
     }
-  }, [step, total, hits, xpTotal, node.id, completeLesson, earnGems]);
+  }, [step, total, hits, xpTotal, node.id, completeLesson, earnGems, lessonKey]);
 
   function check() {
     if (!ex || sel === null) return;
@@ -300,6 +364,9 @@ export default function LeccionPage() {
                 fullWidth
                 onClick={() => {
                   saved.current = false;
+                  if (lessonKey) {
+                    try { sessionStorage.removeItem(lessonKey); } catch { /* ignore */ }
+                  }
                   setStep(0);
                   setSel(null);
                   setChecked(false);

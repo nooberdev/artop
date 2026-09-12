@@ -4,14 +4,13 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
-  GearSix, Palette, Bell, Globe, Question, SignOut, CheckCircle, WarningCircle,
-  MapTrifold, Flame, Ticket, Trophy, MagnifyingGlass, Package, Info,
+  GearSix, Bell, Globe, Question, SignOut,
+  Flame, Trophy, MagnifyingGlass,
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/shell/AppShell";
 import {
-  Card, CardTitle, CardSub, Button, IconButton, ProgressBar, Badge, Avatar,
-  Tooltip, Modal, Drawer, Tabs, SegmentedControl, Divider, Skeleton, SkeletonCard,
-  EmptyState, Dropdown, DropdownItem, Input, Select, Radio, Checkbox, CircularProgress, useToast,
+  Card, CardTitle, CardSub, Button, ProgressBar, Badge, Avatar,
+  Tabs, SegmentedControl, Select, Radio, Checkbox, useToast,
 } from "@/components/ui";
 import { mockUser } from "@/lib/mock";
 import { useStore } from "@/lib/store";
@@ -65,62 +64,11 @@ function ConfigPanel() {
   );
 }
 
-function SystemGallery() {
-  const { push } = useToast();
-  const [modal, setModal] = useState(false);
-  const [drawer, setDrawer] = useState(false);
-  const [seg, setSeg] = useState("a");
-  return (
-    <div className="flex flex-col gap-4">
-      <Card><CardTitle>Sistema artop - tokens vivos</CardTitle><CardSub>Botones grandes, radios de 12 a 28px, movimiento de 200 a 300ms, táctil mínimo de 44px.</CardSub>
-        <div className="mt-4 flex flex-wrap gap-2.5">
-          <Button size="sm">Primary sm</Button><Button size="md" variant="secondary">Secondary</Button><Button variant="outline">Outline</Button><Button variant="ghost">Ghost</Button><Button variant="dark">Dark</Button>
-        </div>
-        <div className="mt-3 flex flex-wrap gap-2.5">
-          <Button state="loading">Cargando</Button><Button state="success">Éxito</Button><Button state="error">Error</Button><Button disabled>Deshabilitado</Button>
-        </div>
-        <div className="mt-3 flex items-center gap-2.5">
-          <IconButton label="Mi Camino"><MapTrifold size={20} weight="bold" /></IconButton>
-          <IconButton label="Racha activa" active><Flame size={20} weight="fill" /></IconButton>
-          <Tooltip label="Pase con tooltip"><span><IconButton label="Pase"><Ticket size={20} weight="bold" /></IconButton></span></Tooltip>
-          <Dropdown label="Abrir menú" trigger={<span>Menú</span>}><DropdownItem>Ver perfil</DropdownItem><DropdownItem>Configuración</DropdownItem><DropdownItem danger>Salir</DropdownItem></Dropdown>
-        </div>
-      </Card>
-      <Card><CardTitle>Progreso y estado</CardTitle>
-        <div className="mt-4 grid gap-4">
-          <ProgressBar value={68} label="Etapa actual" showValue />
-          <ProgressBar value={100} tone="success" label="Completado" showValue />
-          <div className="flex items-center gap-5"><CircularProgress value={72} label="Meta" /><CircularProgress value={100} size={52} label="Top" /></div>
-          <div className="flex flex-wrap gap-2"><Badge tone="brand">Nuevo</Badge><Badge tone="neutral">Nivel 7</Badge><Badge tone="success"><CheckCircle size={14} weight="fill" /> Listo</Badge><Badge tone="warning">Repasar</Badge><Badge tone="danger"><WarningCircle size={14} weight="fill" /> Débil</Badge><Badge tone="info"><Info size={14} /> Dato</Badge></div>
-          <div className="flex items-center gap-3"><Avatar name="Jaziel" /><Avatar name="Mara Vidal" size={40} /><Avatar name="Leo Paz" size={40} /></div>
-        </div>
-      </Card>
-      <Card><CardTitle>Formularios</CardTitle>
-        <div className="mt-4 grid gap-4">
-          <Input label="Qué quieres aprender" placeholder="Japonés conversacional" hint="Una frase corta basta." />
-          <Input label="Con error" defaultValue=" phyton" error="Revisa la ortografía: Python." />
-          <Input label="Correcto" defaultValue="Python desde cero" success="Se entiende perfecto." />
-          <Select label="Duración" options={[{ value: "s", label: "Corta - 3 etapas" }, { value: "m", label: "Media - 8 etapas" }, { value: "l", label: "Larga - 20 etapas" }]} />
-          <SegmentedControl label="Vista" value={seg} onChange={setSeg} options={[{ value: "a", label: "Tarjetas" }, { value: "b", label: "Lista" }]} />
-          <div className="flex flex-wrap gap-2.5">
-            <Button variant="secondary" size="md" onClick={() => setModal(true)}>Abrir modal</Button>
-            <Button variant="secondary" size="md" onClick={() => setDrawer(true)}>Abrir drawer</Button>
-            <Button variant="ghost" size="md" onClick={() => push({ title: "Racha guardada", body: "Mañana seguimos.", tone: "info" })}>Lanzar toast</Button>
-          </div>
-        </div>
-      </Card>
-      <Card><CardTitle>Carga y vacío</CardTitle><div className="mt-4 grid gap-3"><Skeleton className="h-12" /><SkeletonCard /><EmptyState icon={<Package size={28} />} title="Nada por aquí todavía" body="Cuando generes tu primer curso con IA, aparecerá en este espacio." actionLabel="Crear curso" /></div></Card>
-      <Divider label="Fin del sistema" />
-      <Modal open={modal} onClose={() => setModal(false)} title="Lección desbloqueada"><p className="text-[15px] font-medium text-[var(--color-text-2)]">Completaste Bucles for. Se desbloqueó Funciones parte 1.</p><div className="mt-5"><Button fullWidth onClick={() => setModal(false)}>Seguir aprendiendo</Button></div></Modal>
-      <Drawer open={drawer} onClose={() => setDrawer(false)} title="Ajustes rápidos"><p className="text-[15px] font-medium text-[var(--color-text-2)]">Cambia el tema o el ritmo sin salir de tu lección.</p></Drawer>
-    </div>
-  );
-}
-
 function PerfilInner() {
   const params = useSearchParams();
   const { streak, gems, xp } = useStore();
-  const initial = params.get("tab") === "config" ? "config" : "resumen";
+  const tab = params.get("tab");
+  const initial = tab === "config" ? "config" : "resumen";
   return (
     <AppShell title="Tu perfil" subtitle={`${mockUser.handle} - Nivel ${mockUser.level}`}>
       <div className="flex flex-col gap-4">
@@ -139,6 +87,7 @@ function PerfilInner() {
           <div className="mt-4"><ProgressBar value={xp} max={mockUser.xpGoal} label="Camino al nivel 8" showValue /></div>
         </Card>
         <Tabs
+          key={initial}
           defaultId={initial}
           items={[
             { id: "resumen", label: "Resumen", content: (
@@ -156,7 +105,6 @@ function PerfilInner() {
               </div>
             )},
             { id: "config", label: "Configuración", content: <ConfigPanel /> },
-            { id: "sistema", label: "Sistema", content: <SystemGallery /> },
           ]}
         />
       </div>
