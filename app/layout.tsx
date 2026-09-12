@@ -12,7 +12,6 @@ import "@fontsource/outfit/800.css";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "./globals.css";
-import { ThemeProvider } from "@/lib/theme";
 import { StoreProvider } from "@/lib/store";
 import { ToastProvider } from "@/components/ui";
 
@@ -24,21 +23,16 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F8F9FA" },
-    { media: "(prefers-color-scheme: dark)", color: "#0D0D12" },
-  ],
+  themeColor: "#F8F9FA",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es">
       <body className="antialiased">
-        <ThemeProvider>
-          <StoreProvider>
-            <ToastProvider>{children}</ToastProvider>
-          </StoreProvider>
-        </ThemeProvider>
+        <StoreProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </StoreProvider>
       </body>
     </html>
   );

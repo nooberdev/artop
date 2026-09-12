@@ -20,7 +20,7 @@
   --color-brand-ink: #9e00a1;
   --color-brand-tint: #fae2fb;
 
-  /* surfaces (light defaults, overridden in .dark) */
+  /* surfaces (light-only) */
   --color-surface: #ffffff;
   --color-surface-2: #f8f9fa;
   --color-surface-3: #eef0f3;
@@ -61,29 +61,8 @@
   --shadow-pop: 0 12px 32px -16px rgb(17 17 22 / 0.35), 0 4px 12px -6px rgb(17 17 22 / 0.15);
 }
 
-/* Dark theme overrides via .dark class */
-.dark {
-  --color-surface: #0d0d12;
-  --color-surface-2: #14141c;
-  --color-surface-3: #181820;
-  --color-card: #181820;
-  --color-border: #26262f;
-  --color-text: #f4f4f8;
-  --color-text-2: #c2c2cf;
-  --color-text-3: #9a9aa8;
-  --color-brand: #ee4def;
-  --color-brand-deep: #a200a6;
-  --color-brand-ink: #f487f4;
-  --color-brand-tint: #331233;
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.5), 0 12px 32px -16px rgb(0 0 0 / 0.7);
-  --shadow-pop: 0 12px 36px -12px rgb(0 0 0 / 0.7), 0 4px 16px -6px rgb(0 0 0 / 0.5);
-}
-
 :root {
   color-scheme: light;
-}
-.dark {
-  color-scheme: dark;
 }
 
 html {
@@ -102,18 +81,12 @@ body {
 .artop-brand-text {
   color: var(--color-brand-ink);
 }
-.dark .artop-brand-text {
-  color: var(--color-brand-ink);
-}
 
 /* focus visible — always obvious, 3px */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
   outline: 3px solid var(--color-artop-cobalt);
   outline-offset: 2px;
   border-radius: 8px;
-}
-.dark :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline-color: #4cc3ff;
 }
 
 /* motion defaults */
@@ -158,9 +131,6 @@ body {
 * {
   scrollbar-width: thin;
   scrollbar-color: #c9cad2 transparent;
-}
-.dark * {
-  scrollbar-color: #3a3a46 transparent;
 }
 
 /* selection in brand */

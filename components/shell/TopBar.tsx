@@ -1,13 +1,11 @@
 "use client";
 
-import { Flame, Lightning, Diamond, Moon, Sun } from "@phosphor-icons/react";
-import { useTheme } from "@/lib/theme";
+import { Flame, Lightning, Diamond } from "@phosphor-icons/react";
 import { useStore } from "@/lib/store";
 import { mockUser } from "@/lib/mock";
-import { Avatar, IconButton, Tooltip } from "@/components/ui";
+import { Avatar, Tooltip } from "@/components/ui";
 
 export function TopBar({ title, subtitle }: { title: string; subtitle?: string }) {
-  const { theme, toggle } = useTheme();
   const { streak, xp, gems, energy } = useStore();
   return (
     <header className="sticky top-0 z-[50] border-b border-[var(--color-border)] bg-[var(--color-surface-2)]/85 backdrop-blur-lg">
@@ -39,11 +37,6 @@ export function TopBar({ title, subtitle }: { title: string; subtitle?: string }
             <Lightning size={20} weight="fill" className="text-[#EAB308]" aria-hidden />
             {energy}
           </span>
-        </Tooltip>
-        <Tooltip label={theme === "light" ? "Activar modo oscuro" : "Activar modo claro"}>
-          <IconButton label={theme === "light" ? "Activar modo oscuro" : "Activar modo claro"} onClick={toggle}>
-            {theme === "light" ? <Moon size={20} weight="bold" /> : <Sun size={20} weight="bold" />}
-          </IconButton>
         </Tooltip>
         <Avatar name={mockUser.name} size={44} />
       </div>

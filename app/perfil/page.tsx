@@ -4,7 +4,7 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
-  GearSix, Palette, Bell, Globe, Question, SignOut, CheckCircle, WarningCircle,
+  GearSix, Bell, Globe, Question, SignOut, CheckCircle, WarningCircle,
   MapTrifold, Flame, Ticket, Trophy, MagnifyingGlass, Package, Info,
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/shell/AppShell";
@@ -15,21 +15,14 @@ import {
 } from "@/components/ui";
 import { mockUser } from "@/lib/mock";
 import { useStore } from "@/lib/store";
-import { useTheme } from "@/lib/theme";
 
 function ConfigPanel() {
-  const { theme, set } = useTheme();
   const { push } = useToast();
   const [level, setLevel] = useState("intermedio");
   const [lang, setLang] = useState("es");
   const [diff, setDiff] = useState("suave");
   return (
     <div className="flex flex-col gap-4">
-      <Card>
-        <CardTitle>Apariencia</CardTitle>
-        <CardSub>Elige cómo se ve artop. Lo guardamos en tu dispositivo.</CardSub>
-        <div className="mt-4"><SegmentedControl label="Tema" value={theme} onChange={(v) => set(v as "light" | "dark")} options={[{ value: "light", label: "Claro" }, { value: "dark", label: "Oscuro" }]} /></div>
-      </Card>
       <Card>
         <CardTitle>Aprendizaje</CardTitle>
         <div className="mt-4 grid gap-4">
@@ -112,7 +105,7 @@ function SystemGallery() {
       <Card><CardTitle>Carga y vacío</CardTitle><div className="mt-4 grid gap-3"><Skeleton className="h-12" /><SkeletonCard /><EmptyState icon={<Package size={28} />} title="Nada por aquí todavía" body="Cuando generes tu primer curso con IA, aparecerá en este espacio." actionLabel="Crear curso" /></div></Card>
       <Divider label="Fin del sistema" />
       <Modal open={modal} onClose={() => setModal(false)} title="Lección desbloqueada"><p className="text-[15px] font-medium text-[var(--color-text-2)]">Completaste Bucles for. Se desbloqueó Funciones parte 1.</p><div className="mt-5"><Button fullWidth onClick={() => setModal(false)}>Seguir aprendiendo</Button></div></Modal>
-      <Drawer open={drawer} onClose={() => setDrawer(false)} title="Ajustes rápidos"><p className="text-[15px] font-medium text-[var(--color-text-2)]">Cambia el tema o el ritmo sin salir de tu lección.</p></Drawer>
+      <Drawer open={drawer} onClose={() => setDrawer(false)} title="Ajustes rápidos"><p className="text-[15px] font-medium text-[var(--color-text-2)]">Ajusta el ritmo sin salir de tu lección.</p></Drawer>
     </div>
   );
 }
