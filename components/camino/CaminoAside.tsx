@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Flame, CheckCircle, Trophy, Gift, Sparkle } from "@phosphor-icons/react";
+import { Flame, CheckCircle, Trophy, Gift } from "@phosphor-icons/react";
 import { Card } from "@/components/ui";
 import { useMounted } from "@/lib/anim";
 import { useStore } from "@/lib/store";
@@ -71,9 +71,6 @@ export function CaminoAside() {
       <Card aria-label="Misiones del día" className="artop-card-cyber">
         <div className="flex items-center justify-between gap-2">
           <h2 className="font-display text-[17px] font-extrabold tracking-tight">Misiones del día</h2>
-          <span className="inline-flex items-center gap-1 text-[12px] font-extrabold uppercase tracking-[0.08em] text-[var(--color-neon-ink)]">
-            <Sparkle size={12} weight="fill" aria-hidden /> Ver todo
-          </span>
         </div>
         <ul className="mt-4 flex flex-col gap-4">
           {caminoQuests.map((q) => (
