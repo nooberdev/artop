@@ -23,7 +23,7 @@ export function LessonCard({
         style={locked ? undefined : { background: unit.color }}
         className={cn(
           "rounded-[20px] p-4 shadow-xl",
-          locked ? "bg-[#e5e5e5] dark:bg-[#2b2b33]" : "text-white"
+          locked ? "bg-[#e5e5e5] " : "text-white"
         )}
       >
         <p className={cn("font-display text-[19px] font-extrabold leading-snug tracking-tight", locked ? "text-[var(--color-text-2)]" : "")}>
@@ -39,7 +39,7 @@ export function LessonCard({
           className={cn(
             "artop-press mt-3 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-[14px] font-display text-[16px] font-extrabold tracking-wide",
             locked
-              ? "cursor-not-allowed bg-black/10 text-[var(--color-text-3)] dark:bg-white/10"
+              ? "cursor-not-allowed bg-black/10 text-[var(--color-text-3)] "
               : "bg-white hover:bg-white/90"
           )}
           style={locked ? undefined : { color: unit.color }}
@@ -56,7 +56,7 @@ export function LessonCard({
       <span
         aria-hidden
         style={locked ? undefined : { background: unit.color }}
-        className={cn("mx-auto -mt-2 block size-4 rotate-45", locked ? "bg-[#e5e5e5] dark:bg-[#2b2b33]" : "")}
+        className={cn("mx-auto -mt-2 block size-4 rotate-45", locked ? "bg-[#e5e5e5] " : "")}
       />
     </div>
   );

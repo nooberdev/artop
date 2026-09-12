@@ -38,11 +38,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         "disabled:cursor-not-allowed disabled:opacity-60 disabled:border-b-0",
         sizes[size],
         fullWidth && "w-full",
-        variant === "primary" && "bg-[var(--color-brand)] text-white border-[var(--color-brand-deep)] hover:bg-[#b800bb] dark:hover:bg-[#f468f5]",
+        variant === "primary" && "bg-[var(--color-brand)] text-white border-[var(--color-brand-deep)] hover:bg-[#b800bb] ",
         variant === "secondary" && "bg-[var(--color-surface-3)] text-[var(--color-text)] border-[var(--color-border)] hover:bg-[var(--color-border)]",
         variant === "ghost" && "bg-transparent text-[var(--color-text)] border-transparent hover:bg-[var(--color-surface-3)]",
         variant === "outline" && "bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--color-border)] border-2 border-b-4 hover:border-[var(--color-artop-violet)]",
-        variant === "dark" && "bg-[#111116] text-white border-black hover:bg-black dark:bg-white dark:text-[#111116] dark:border-white/40",
+        variant === "dark" && "bg-[#111116] text-white border-black hover:bg-black ",
         state === "success" && "bg-[#22c55e]! text-white! border-[#15803d]!",
         state === "error" && "bg-[#ef4444]! text-white! border-[#b91c1c]!",
         className

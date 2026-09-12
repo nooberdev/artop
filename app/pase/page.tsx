@@ -18,10 +18,10 @@ const KIND_ICON: Record<RewardKind, typeof Gift> = {
 };
 
 const KIND_BG: Record<RewardKind, string> = {
-  xp: "bg-[#FEF3C7] text-[#B45309] dark:bg-[#451A03] dark:text-[#FCD34D]",
-  rombos: "bg-[#E0F2FE] text-[#0284C7] dark:bg-[#082F49] dark:text-[#7DD3FC]",
-  freeze: "bg-[#E0F2FE] text-[#0284C7] dark:bg-[#082F49] dark:text-[#7DD3FC]",
-  bundle: "bg-[#FAE2FB] text-[#9E00A1] dark:bg-[#331233] dark:text-[#F487F4]",
+  xp: "bg-[#FEF3C7] text-[#B45309] ",
+  rombos: "bg-[#E0F2FE] text-[#0284C7] ",
+  freeze: "bg-[#E0F2FE] text-[#0284C7] ",
+  bundle: "bg-[#FAE2FB] text-[#9E00A1] ",
 };
 
 function RewardRow({
@@ -43,7 +43,7 @@ function RewardRow({
         state === "claimable"
           ? "bg-[var(--color-surface)] border-[var(--color-brand)]"
           : premium
-            ? "bg-[#FDF3DC] border-[#E8C86A] dark:bg-[#2E230A] dark:border-[#5A4517]"
+            ? "bg-[#FDF3DC] border-[#E8C86A] "
             : "bg-[var(--color-surface)] border-[var(--color-border)]",
         state === "claimed" && "opacity-70"
       )}

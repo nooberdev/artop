@@ -28,8 +28,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input({ l
           "min-h-[48px] w-full rounded-[14px] border-2 bg-[var(--color-surface)] px-4 text-[16px] font-medium text-[var(--color-text)] placeholder:text-[var(--color-text-3)]",
           "transition-colors duration-200 hover:border-[#b9bac4]",
           !error && !success && "border-[var(--color-border)]",
-          error && "border-[#ef4444] bg-[#fef2f2] dark:bg-[#2a1215]",
-          success && "border-[#22c55e] bg-[#f0fdf4] dark:bg-[#0a2415]",
+          error && "border-[#ef4444] bg-[#fef2f2] ",
+          success && "border-[#22c55e] bg-[#f0fdf4] ",
           "disabled:opacity-60 disabled:cursor-not-allowed",
           className
         )}

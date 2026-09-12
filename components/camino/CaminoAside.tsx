@@ -93,7 +93,7 @@ export function CaminoAside() {
         <h2 className="font-display text-[17px] font-extrabold">Ya dominas</h2>
         <ul className="mt-3 flex flex-wrap gap-2">
           {caminoMastered.map((c) => (
-            <li key={c} className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-[#dcfce7] px-3 text-[13px] font-extrabold text-[#15803d] dark:bg-[#052e16] dark:text-[#86efac]">
+            <li key={c} className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-[#dcfce7] px-3 text-[13px] font-extrabold text-[#15803d] ">
               <CheckCircle size={16} weight="fill" aria-hidden /> {c}
             </li>
           ))}

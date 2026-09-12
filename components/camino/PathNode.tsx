@@ -78,7 +78,7 @@ export function PathNode({
           isChest ? "size-[72px] rounded-[24px]" : "size-[68px] rounded-full",
           done || active ? "text-white" : "",
           node.status === "available" && "bg-[var(--color-surface)] border-[var(--color-border)]",
-          node.status === "locked" && "bg-[#e5e5e5] border-[#cfcfcf] text-[#afafaf] dark:bg-[#2b2b33] dark:border-[#1c1c22] dark:text-[#6b6b76]",
+          node.status === "locked" && "bg-[#e5e5e5] border-[#cfcfcf] text-[#afafaf] ",
           active && "artop-complete-pop"
         )}
       >

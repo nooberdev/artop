@@ -40,7 +40,7 @@ export function CourseCompleted({ onReview }: { onReview: () => void }) {
   const { push } = useToast();
   return (
     <Card accentBorder className="artop-rise flex flex-col items-center px-6 py-8 text-center">
-      <span className="artop-complete-pop flex size-[76px] items-center justify-center rounded-full bg-[#FEF3C7] dark:bg-[#451A03]">
+      <span className="artop-complete-pop flex size-[76px] items-center justify-center rounded-full bg-[#FEF3C7] ">
         <Trophy size={46} weight="fill" className="text-[#EAB308]" aria-hidden />
       </span>
       <CardTitle className="mt-4 text-[24px]!">¡Curso completado!</CardTitle>
@@ -142,7 +142,7 @@ export function GenerationCard({ initialPaused = false }: { initialPaused?: bool
 export function CourseError({ onRetry }: { onRetry: () => void }) {
   return (
     <Card className="artop-rise flex flex-col items-center px-6 py-8 text-center">
-      <span className="flex size-[64px] items-center justify-center rounded-[22px] bg-[#FEE2E2] dark:bg-[#450A0A]">
+      <span className="flex size-[64px] items-center justify-center rounded-[22px] bg-[#FEE2E2] ">
         <WarningCircle size={38} weight="fill" className="text-[#DC2626]" aria-hidden />
       </span>
       <CardTitle className="mt-4 text-[20px]!">Algo se atascó</CardTitle>

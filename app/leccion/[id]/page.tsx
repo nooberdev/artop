@@ -210,7 +210,7 @@ export default function LeccionPage() {
             <Card>
               <CardTitle className="text-[17px]!">La idea en 30 segundos</CardTitle>
               <CardSub className="mt-1.5">{node.detail} Empieza pequeño, prueba cada línea y fíjate en los mensajes: Python siempre te dice qué pasó.</CardSub>
-              <div className="mt-3 rounded-[12px] bg-[#111116] p-4 font-mono text-[14px] leading-relaxed text-[#7DD3FC] dark:bg-black" dir="ltr">
+              <div className="mt-3 rounded-[12px] bg-[#111116] p-4 font-mono text-[14px] leading-relaxed text-[#7DD3FC] " dir="ltr">
                 print("Hola, artop")
                 <br />
                 <span className="text-[#86EFAC]"># → Hola, artop</span>
@@ -316,7 +316,7 @@ export default function LeccionPage() {
 
         {step === total + 1 && (
           <div className="artop-rise flex flex-col items-center py-6 text-center">
-            <span className="artop-complete-pop flex size-[88px] items-center justify-center rounded-full bg-[#FEF3C7] dark:bg-[#451A03]">
+            <span className="artop-complete-pop flex size-[88px] items-center justify-center rounded-full bg-[#FEF3C7] ">
               <Trophy size={46} weight="fill" className="text-[#EAB308]" aria-hidden />
             </span>
             <h1 className="mt-4 font-display text-[26px] font-extrabold tracking-tight">¡Lección completada!</h1>
@@ -331,7 +331,7 @@ export default function LeccionPage() {
               <CardTitle className="text-[16px]!">Dominaste</CardTitle>
               <ul className="mt-2 flex flex-wrap gap-2">
                 {[node.title, unit.title].map((c) => (
-                  <li key={c} className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-[#dcfce7] px-3 text-[13px] font-extrabold text-[#15803d] dark:bg-[#052e16] dark:text-[#86EFAC]">
+                  <li key={c} className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-[#dcfce7] px-3 text-[13px] font-extrabold text-[#15803d] ">
                     <CheckCircle size={16} weight="fill" aria-hidden /> {c}
                   </li>
                 ))}
@@ -365,13 +365,13 @@ export default function LeccionPage() {
       </main>
 
       {checked && ex && (
-        <div className={cn("fixed inset-x-0 bottom-0 z-40 border-t-2", ok ? "bg-[#D7FFB8] border-[#58CC02] dark:bg-[#0B2E0B] dark:border-[#22C55E]" : "bg-[#FFDCE0] border-[#FF5C5C] dark:bg-[#3A0D12] dark:border-[#EF4444]")}>
+        <div className={cn("fixed inset-x-0 bottom-0 z-40 border-t-2", ok ? "bg-[#D7FFB8] border-[#58CC02] " : "bg-[#FFDCE0] border-[#FF5C5C] ")}>
           <div className="mx-auto w-full max-w-[680px] px-4 py-4">
-            <p className={cn("flex items-center gap-2 font-display text-[18px] font-extrabold", ok ? "text-[#3C8500] dark:text-[#86EFAC]" : "text-[#B91C1C] dark:text-[#FCA5A5]")}>
+            <p className={cn("flex items-center gap-2 font-display text-[18px] font-extrabold", ok ? "text-[#3C8500] " : "text-[#B91C1C] ")}>
               {ok ? <><CheckCircle size={24} weight="fill" /> ¡Bien!</> : <><X size={24} weight="bold" /> Casi…</>}
             </p>
-            {!ok && <p className="mt-1 text-[14px] font-medium text-[#7F1D1D] dark:text-[#FECACA]">{ex.why}</p>}
-            {ok && <p className="mt-1 text-[14px] font-medium text-[#3C8500] dark:text-[#86EFAC]">{ex.why}</p>}
+            {!ok && <p className="mt-1 text-[14px] font-medium text-[#7F1D1D] ">{ex.why}</p>}
+            {ok && <p className="mt-1 text-[14px] font-medium text-[#3C8500] ">{ex.why}</p>}
             <div className="mt-3">
               <Button size="lg" fullWidth onClick={next} variant={ok ? "dark" : "primary"}>
                 Continuar

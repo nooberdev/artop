@@ -21,7 +21,7 @@ export function Avatar({ name, size = 48, config, className }: AvatarProps) {
       aria-label={`Avatar de ${name}`}
       style={{ width: size, height: size }}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white dark:border-white/15 shadow-[var(--shadow-card)]",
+        "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white shadow-[var(--shadow-card)]",
         className
       )}
     >

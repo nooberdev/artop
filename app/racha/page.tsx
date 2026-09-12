@@ -46,7 +46,7 @@ function MonthGrid({ streakDays }: { streakDays: number }) {
               key={day}
               className={cn(
                 "flex size-9 items-center justify-center rounded-full text-[13px] font-extrabold sm:size-10",
-                active ? "bg-[#FFE3C2] text-[#B25E00] dark:bg-[#3A2200] dark:text-[#FFB35C]" : "text-[var(--color-text-3)]",
+                active ? "bg-[#FFE3C2] text-[#B25E00] " : "text-[var(--color-text-3)]",
                 isToday && "ring-2 ring-[#FF9600] ring-offset-2 ring-offset-[var(--color-card)]"
               )}
             >
@@ -82,7 +82,7 @@ export default function RachaPage() {
       <div className="flex flex-col gap-4">
         <Card className="artop-rise">
           <div className="flex items-center gap-4 sm:gap-5">
-            <span className="flex size-[76px] shrink-0 items-center justify-center rounded-full bg-[#FFE3C2] dark:bg-[#3A2200] sm:size-[88px]">
+            <span className="flex size-[76px] shrink-0 items-center justify-center rounded-full bg-[#FFE3C2] sm:size-[88px]">
               <Flame size={44} weight="fill" className="artop-flicker text-[#FF9600]" aria-hidden />
             </span>
             <div className="min-w-0 text-left">
