@@ -1,14 +1,46 @@
 "use client";
 
 import Link from "next/link";
-import { Flame, CheckCircle, Trophy, Gift } from "@phosphor-icons/react";
-import { Card } from "@/components/ui";
+import { Flame, CheckCircle, Trophy, Crosshair, Lightning, Timer } from "@phosphor-icons/react";
 import { useMounted } from "@/lib/anim";
 import { useStore } from "@/lib/store";
 import { getRank } from "@/lib/metas";
 import { caminoMastered, caminoQuests } from "@/lib/camino";
+import { cn } from "@/lib/utils";
+import type { ComponentType, ReactNode } from "react";
+import type { IconProps } from "@phosphor-icons/react";
 
-function QuestBar({ done, goal, label }: { done: number; goal: number; label: string }) {
+const QUEST_ICONS: ComponentType<IconProps>[] = [Lightning, Crosshair, Timer];
+
+function HudPanel({
+  ariaLabel,
+  label,
+  children,
+  className,
+}: {
+  ariaLabel: string;
+  label: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <section aria-label={ariaLabel} className={cn("artop-hud-panel p-4 sm:p-5", className)}>
+      <span aria-hidden className="artop-hud-corner artop-hud-corner-tl" />
+      <span aria-hidden className="artop-hud-corner artop-hud-corner-tr" />
+      <span aria-hidden className="artop-hud-corner artop-hud-corner-bl" />
+      <span aria-hidden className="artop-hud-corner artop-hud-corner-br" />
+      <div className="relative z-[1]">
+        <div className="mb-3 flex items-center gap-2">
+          <span aria-hidden className="size-1.5 rounded-full bg-[var(--color-neon)] shadow-[0_0_8px_rgb(255_0_127_/_0.8)]" />
+          <p className="artop-hud-label">{label}</p>
+        </div>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function QuestMeter({ done, goal, label }: { done: number; goal: number; label: string }) {
   const mounted = useMounted();
   const pct = Math.max(0, Math.min(100, (done / goal) * 100));
   return (
@@ -19,15 +51,15 @@ function QuestBar({ done, goal, label }: { done: number; goal: number; label: st
         aria-valuemin={0}
         aria-valuemax={goal}
         aria-label={label}
-        className="h-3.5 w-full overflow-hidden rounded-full bg-[var(--color-surface-3)]"
+        className="artop-hud-meter w-full"
       >
-        <div
-          className="artop-progress-fill h-full rounded-full bg-[var(--color-neon)]"
-          style={{ width: mounted ? `${pct}%` : "0%" }}
-        />
+        <span style={{ width: mounted ? `${pct}%` : "0%" }} />
       </div>
-      <p className="mt-1 text-right text-[12px] font-extrabold text-[var(--color-text-3)]">
-        {done} / {goal}
+      <p className="mt-1.5 flex items-center justify-between text-[11px] font-extrabold tracking-wide text-[var(--color-text-3)]">
+        <span className="uppercase opacity-80">signal</span>
+        <span className="tabular-nums text-[var(--color-neon-ink)]">
+          {done}/{goal}
+        </span>
       </p>
     </div>
   );
@@ -38,90 +70,114 @@ export function CaminoAside() {
   const { rank, next, missing } = getRank(rankPoints);
   const week = [40, 65, 30, 80, 55, 90, 72];
   return (
-    <div className="flex flex-col gap-4">
-      <Card aria-label="Racha" className="artop-card-cyber relative overflow-hidden">
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -right-6 -top-6 size-24 rounded-full bg-[#FFF4E5]"
-        />
-        <div className="relative flex items-center gap-3">
-          <span className="flex size-[48px] items-center justify-center rounded-[16px] bg-[#FFF4E5]">
-            <Flame size={30} weight="fill" className="artop-flicker text-[#FF9600]" aria-hidden />
+    <div className="flex flex-col gap-3.5">
+      <HudPanel ariaLabel="Racha" label="Racha // live">
+        <div className="flex items-center gap-3">
+          <span className="relative flex size-[52px] items-center justify-center rounded-[14px] border border-[var(--color-neon)]/25 bg-[var(--color-neon-mist)] shadow-[inset_0_0_16px_rgb(255_0_127_/_0.12)]">
+            <span
+              aria-hidden
+              className="absolute inset-[3px] rounded-[11px] border border-dashed border-[var(--color-neon)]/25"
+            />
+            <Flame size={28} weight="fill" className="artop-flicker relative text-[#FF9600]" aria-hidden />
           </span>
-          <div>
-            <p className="font-display text-[22px] font-extrabold leading-none tracking-tight">{streak} días</p>
-            <p className="mt-1 text-[13px] font-bold text-[var(--color-text-2)]">de racha. No la rompas.</p>
+          <div className="min-w-0">
+            <p className="font-display text-[24px] font-extrabold leading-none tracking-tight tabular-nums">
+              {streak}
+              <span className="ml-1 text-[13px] font-extrabold tracking-[0.12em] text-[var(--color-neon-ink)] uppercase">
+                días
+              </span>
+            </p>
+            <p className="mt-1.5 text-[13px] font-bold text-[var(--color-text-2)]">
+              Señal activa. No la rompas.
+            </p>
           </div>
         </div>
-        <div className="relative mt-3.5 flex gap-1.5" aria-hidden>
+        <div className="mt-4 flex gap-1" aria-hidden>
           {week.map((v, i) => (
             <span
               key={i}
               title={`${v} XP`}
-              className={
+              className={cn(
+                "h-8 flex-1 rounded-[6px] border",
                 v >= 50
-                  ? "h-2.5 flex-1 rounded-full bg-[#FF9600]"
-                  : "h-2.5 flex-1 rounded-full bg-[var(--color-surface-3)]"
-              }
+                  ? "border-[var(--color-neon)]/35 bg-[var(--color-neon)]/85 shadow-[0_0_10px_rgb(255_0_127_/_0.35)]"
+                  : "border-[var(--color-border)] bg-[var(--color-surface-3)]/80"
+              )}
+              style={v >= 50 ? { opacity: 0.55 + (v / 100) * 0.45 } : undefined}
             />
           ))}
         </div>
-      </Card>
+        <p className="mt-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--color-text-3)]">
+          7-day uplink
+        </p>
+      </HudPanel>
 
-      <Card aria-label="Misiones del día" className="artop-card-cyber">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="font-display text-[17px] font-extrabold tracking-tight">Misiones del día</h2>
-        </div>
-        <ul className="mt-4 flex flex-col gap-4">
-          {caminoQuests.map((q) => (
-            <li key={q.id} className="flex items-center gap-3">
-              <span className="flex size-[40px] shrink-0 items-center justify-center rounded-[14px] bg-[var(--color-neon-tint)]">
-                <Gift size={24} weight="duotone" className="text-[var(--color-neon)]" aria-hidden />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[14px] font-bold">{q.title}</p>
-                <QuestBar done={q.done} goal={q.goal} label={q.title} />
-              </div>
-            </li>
-          ))}
+      <HudPanel ariaLabel="Misiones del día" label="Misiones // hoy">
+        <ul className="flex flex-col gap-3.5">
+          {caminoQuests.map((q, i) => {
+            const Icon = QUEST_ICONS[i % QUEST_ICONS.length];
+            return (
+              <li
+                key={q.id}
+                className="rounded-[14px] border border-[var(--color-neon)]/15 bg-white/70 px-3 py-2.5 shadow-[inset_0_0_0_1px_rgb(255_255_255_/_0.6)]"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex size-[40px] shrink-0 items-center justify-center rounded-[12px] border border-[var(--color-neon)]/30 bg-[var(--color-neon-tint)]">
+                    <Icon size={20} weight="bold" className="text-[var(--color-neon)]" aria-hidden />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[14px] font-extrabold tracking-tight">{q.title}</p>
+                    <div className="mt-1.5">
+                      <QuestMeter done={q.done} goal={q.goal} label={q.title} />
+                    </div>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
-      </Card>
+      </HudPanel>
 
-      <Card aria-label="Tu clasificación" className="artop-card-cyber">
-        <h2 className="font-display text-[17px] font-extrabold tracking-tight">Clasificación</h2>
-        <div className="mt-3 flex items-center gap-3">
+      <HudPanel ariaLabel="Tu clasificación" label="Rank // PR">
+        <div className="flex items-center gap-3">
           <span
-            className="flex size-[48px] shrink-0 items-center justify-center rounded-[16px] border-b-4"
-            style={{ background: rank.color, borderColor: "rgb(0 0 0 / 0.25)" }}
+            className="relative flex size-[52px] shrink-0 items-center justify-center rounded-[14px] border-2 border-white/40 shadow-[0_0_18px_rgb(0_0_0_/_0.12)]"
+            style={{ background: rank.color }}
           >
-            <Trophy size={22} weight="fill" className="text-white" aria-hidden />
+            <span
+              aria-hidden
+              className="absolute inset-[4px] rounded-[10px] border border-dashed border-white/35"
+            />
+            <Trophy size={22} weight="fill" className="relative text-white" aria-hidden />
           </span>
-          <p className="text-[14px] font-medium text-[var(--color-text-2)]">
-            <strong className="text-[var(--color-text)]">{rank.name} · {rankPoints} PR</strong>
+          <p className="text-[14px] font-medium leading-snug text-[var(--color-text-2)]">
+            <strong className="font-extrabold text-[var(--color-text)]">
+              {rank.name} · {rankPoints} PR
+            </strong>
             {next ? ` · ${missing} PR para ${next.name}` : " · Rango máximo"}
           </p>
         </div>
         <Link
           href="/clasificacion"
-          className="artop-press mt-3.5 flex min-h-[48px] items-center justify-center rounded-[14px] border-2 border-[var(--color-neon)]/25 bg-[var(--color-neon-mist)] font-display text-[14px] font-extrabold text-[var(--color-neon-ink)] hover:border-[var(--color-neon)] hover:bg-[var(--color-neon-tint)]"
+          className="artop-press mt-4 flex min-h-[48px] items-center justify-center gap-2 rounded-[12px] border-2 border-[var(--color-neon)] bg-[var(--color-neon)] font-display text-[14px] font-extrabold tracking-wide text-white shadow-[0_0_18px_rgb(255_0_127_/_0.35)] hover:bg-[#e60072]"
         >
-          Ver clasificación
+          Abrir clasificación
         </Link>
-      </Card>
+      </HudPanel>
 
-      <Card aria-label="Conceptos dominados" className="artop-card-cyber">
-        <h2 className="font-display text-[17px] font-extrabold tracking-tight">Ya dominas</h2>
-        <ul className="mt-3 flex flex-wrap gap-2">
+      <HudPanel ariaLabel="Conceptos dominados" label="Unlocks // core">
+        <ul className="flex flex-wrap gap-2">
           {caminoMastered.map((c) => (
             <li
               key={c}
-              className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full border border-[#bbf7d0] bg-[#dcfce7] px-3 text-[13px] font-extrabold text-[#15803d]"
+              className="inline-flex min-h-[36px] items-center gap-1.5 rounded-[10px] border border-[var(--color-neon)]/25 bg-[var(--color-neon-mist)] px-3 text-[13px] font-extrabold text-[var(--color-neon-ink)]"
             >
-              <CheckCircle size={16} weight="fill" aria-hidden /> {c}
+              <CheckCircle size={15} weight="fill" className="text-[var(--color-neon)]" aria-hidden />
+              {c}
             </li>
           ))}
         </ul>
-      </Card>
+      </HudPanel>
     </div>
   );
 }

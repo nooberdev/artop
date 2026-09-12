@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   Sparkle, Trophy, WarningCircle, CheckCircle, Pause, Play, ArrowClockwise, Lightning,
 } from "@phosphor-icons/react";
-import { Badge, Button, Card, CardSub, CardTitle, ProgressBar, SkeletonCard, useToast } from "@/components/ui";
+import { Badge, Button, Card, CardSub, CardTitle, SkeletonCard, useToast } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 export type CoursePhase = "active" | "empty" | "loading" | "completed" | "generating" | "paused" | "error";
@@ -102,89 +102,147 @@ export function GenerationCard({ initialPaused = false }: { initialPaused?: bool
     ],
   };
   const remaining = gen.total - gen.done;
+  const pct = Math.round((gen.done / gen.total) * 100);
   return (
-    <Card className="artop-rise artop-card-cyber relative overflow-hidden border-2 border-[var(--color-neon)]/35">
+    <section
+      aria-label="Generando tu curso"
+      className="artop-rise artop-hud-panel relative overflow-hidden p-4 sm:p-5"
+    >
+      <span aria-hidden className="artop-hud-corner artop-hud-corner-tl" />
+      <span aria-hidden className="artop-hud-corner artop-hud-corner-tr" />
+      <span aria-hidden className="artop-hud-corner artop-hud-corner-bl" />
+      <span aria-hidden className="artop-hud-corner artop-hud-corner-br" />
       <span
         aria-hidden
-        className="pointer-events-none absolute -right-8 -top-8 size-36 rounded-full bg-[var(--color-neon-mist)]"
+        className="pointer-events-none absolute -right-10 top-0 size-44 rounded-full bg-[var(--color-neon)]/10 blur-2xl"
       />
-      <div className="relative flex items-center justify-between gap-3">
-        <Badge
-          tone={paused ? "warning" : "brand"}
-          className={paused ? undefined : "bg-[var(--color-neon)] border-transparent"}
-        >
-          <span
-            aria-hidden
-            className={cn(
-              "size-2 rounded-full",
-              paused ? "bg-[#B45309]" : "bg-white artop-pulse"
-            )}
-          />
-          {paused ? "Pausado" : "Generando"}
-        </Badge>
-        <span className="inline-flex items-center gap-1.5 text-[13px] font-extrabold text-[var(--color-neon-ink)]">
-          <Lightning size={14} weight="fill" aria-hidden />
-          {gen.done} / {gen.total} lecciones
-        </span>
-      </div>
-      <CardTitle className="relative mt-3 text-[22px]!">Generando tu curso</CardTitle>
-      <CardSub className="relative">{gen.course} · {paused ? "En pausa" : gen.stage}</CardSub>
-      <div className="relative mt-4">
-        <ProgressBar value={gen.done} max={gen.total} size="md" />
-      </div>
-      <ul className="relative mt-4 flex flex-col gap-2">
-        {gen.batches.map((b) => (
-          <li
-            key={b.name}
-            className={cn(
-              "flex min-h-[52px] items-center gap-3 rounded-[14px] border px-4 text-[14px] font-bold",
-              b.state === "doing" && !paused
-                ? "border-[var(--color-neon)]/40 bg-[var(--color-neon-mist)]"
-                : "border-[var(--color-border)] bg-[var(--color-surface)]"
-            )}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -left-8 bottom-4 size-32 rounded-full bg-[var(--color-neon)]/8 blur-xl"
+      />
+
+      <div className="relative z-[1]">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span aria-hidden className="size-1.5 rounded-full bg-[var(--color-neon)] shadow-[0_0_8px_rgb(255_0_127_/_0.8)]" />
+            <p className="artop-hud-label">Build // pipeline</p>
+          </div>
+          <Badge
+            tone={paused ? "warning" : "brand"}
+            className={paused ? undefined : "bg-[var(--color-neon)] border-transparent shadow-[0_0_14px_rgb(255_0_127_/_0.4)]"}
           >
-            {b.state === "done" ? (
-              <CheckCircle size={20} weight="fill" className="text-[#16A34A]" aria-hidden />
-            ) : b.state === "doing" && !paused ? (
-              <span
-                aria-hidden
-                className="artop-breathe flex size-[20px] items-center justify-center rounded-full bg-[var(--color-neon)] shadow-[0_0_12px_rgb(255_0_127_/_0.45)]"
-              />
-            ) : (
-              <span aria-hidden className="size-[20px] rounded-full border-2 border-[var(--color-border)]" />
-            )}
-            <span className={b.state === "queued" || (paused && b.state === "doing") ? "text-[var(--color-text-3)]" : ""}>
-              {b.name}
+            <span
+              aria-hidden
+              className={cn(
+                "size-2 rounded-full",
+                paused ? "bg-[#B45309]" : "bg-white artop-pulse"
+              )}
+            />
+            {paused ? "Pausado" : "Generando"}
+          </Badge>
+        </div>
+
+        <div className="mt-4 flex items-start justify-between gap-3">
+          <div>
+            <CardTitle className="text-[22px]! tracking-tight">Generando tu curso</CardTitle>
+            <CardSub className="mt-1">{gen.course} · {paused ? "En pausa" : gen.stage}</CardSub>
+          </div>
+          <div className="shrink-0 rounded-[12px] border border-[var(--color-neon)]/30 bg-white/70 px-3 py-2 text-right shadow-[inset_0_0_0_1px_rgb(255_255_255_/_0.7)]">
+            <p className="font-display text-[22px] font-extrabold leading-none tabular-nums text-[var(--color-neon-ink)]">
+              {pct}%
+            </p>
+            <p className="mt-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[var(--color-text-3)]">
+              throughput
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <div className="mb-1.5 flex items-center justify-between text-[12px] font-extrabold tracking-wide text-[var(--color-neon-ink)]">
+            <span className="inline-flex items-center gap-1.5">
+              <Lightning size={14} weight="fill" aria-hidden />
+              {gen.done} / {gen.total} lecciones
             </span>
-            <span className="ml-auto text-[12px] font-extrabold uppercase tracking-wide text-[var(--color-text-3)]">
-              {b.state === "done" ? "Lista" : b.state === "doing" ? (paused ? "En pausa" : "En curso") : "En cola"}
-            </span>
-          </li>
-        ))}
-      </ul>
-      <p className="relative mt-3 text-[13px] font-bold text-[var(--color-text-2)]">
-        {remaining === 0
-          ? "Terminando los últimos detalles."
-          : `Faltan ${remaining} lecciones. Puedes seguir explorando mientras tanto.`}
-      </p>
-      <div className="relative mt-4 grid gap-2.5">
-        <Button
-          variant="secondary"
-          size="md"
-          fullWidth
-          onClick={() => {
-            setPaused((p) => !p);
-            push(
-              paused
-                ? { title: "Generación reanudada", body: gen.stage, tone: "info" }
-                : { title: "Generación pausada", body: "Retomamos cuando quieras.", tone: "info" }
+            <span className="tabular-nums opacity-80">{pct}%</span>
+          </div>
+          <div className="artop-hud-meter w-full">
+            <span style={{ width: `${pct}%` }} />
+          </div>
+        </div>
+
+        <ul className="mt-4 flex flex-col gap-2">
+          {gen.batches.map((b, i) => {
+            const active = b.state === "doing" && !paused;
+            return (
+              <li
+                key={b.name}
+                className={cn(
+                  "relative flex min-h-[52px] items-center gap-3 overflow-hidden rounded-[12px] border px-4 text-[14px] font-bold",
+                  active
+                    ? "border-[var(--color-neon)]/50 bg-[var(--color-neon-mist)] shadow-[0_0_18px_rgb(255_0_127_/_0.18)]"
+                    : "border-[var(--color-neon)]/12 bg-white/75"
+                )}
+              >
+                {active && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-[var(--color-neon)] shadow-[0_0_12px_rgb(255_0_127_/_0.7)]"
+                  />
+                )}
+                <span className="font-display text-[11px] font-extrabold tabular-nums tracking-[0.12em] text-[var(--color-text-3)]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                {b.state === "done" ? (
+                  <CheckCircle size={20} weight="fill" className="text-[#16A34A]" aria-hidden />
+                ) : active ? (
+                  <span
+                    aria-hidden
+                    className="artop-breathe flex size-[20px] items-center justify-center rounded-full bg-[var(--color-neon)] shadow-[0_0_14px_rgb(255_0_127_/_0.55)]"
+                  />
+                ) : (
+                  <span aria-hidden className="size-[20px] rounded-full border-2 border-[var(--color-border)]" />
+                )}
+                <span className={b.state === "queued" || (paused && b.state === "doing") ? "text-[var(--color-text-3)]" : ""}>
+                  {b.name}
+                </span>
+                <span className="ml-auto text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--color-text-3)]">
+                  {b.state === "done" ? "Lista" : b.state === "doing" ? (paused ? "En pausa" : "En curso") : "En cola"}
+                </span>
+              </li>
             );
-          }}
-        >
-          {paused ? <><Play size={18} weight="fill" /> Reanudar</> : <><Pause size={18} weight="fill" /> Pausar</>}
-        </Button>
+          })}
+        </ul>
+
+        <p className="mt-3 text-[13px] font-bold text-[var(--color-text-2)]">
+          {remaining === 0
+            ? "Terminando los últimos detalles."
+            : `Faltan ${remaining} lecciones. Puedes seguir explorando mientras tanto.`}
+        </p>
+
+        <div className="mt-4 grid gap-2.5">
+          <Button
+            size="md"
+            fullWidth
+            className={
+              paused
+                ? "bg-[var(--color-neon)] border-[var(--color-neon-deep)] hover:bg-[#e60072]"
+                : "border-[var(--color-neon)]/40 bg-white text-[var(--color-neon-ink)] hover:border-[var(--color-neon)] hover:bg-[var(--color-neon-mist)]"
+            }
+            variant={paused ? "primary" : "secondary"}
+            onClick={() => {
+              setPaused((p) => !p);
+              push(
+                paused
+                  ? { title: "Generación reanudada", body: gen.stage, tone: "info" }
+                  : { title: "Generación pausada", body: "Retomamos cuando quieras.", tone: "info" }
+              );
+            }}
+          >
+            {paused ? <><Play size={18} weight="fill" /> Reanudar</> : <><Pause size={18} weight="fill" /> Pausar</>}
+          </Button>
+        </div>
       </div>
-    </Card>
+    </section>
   );
 }
 

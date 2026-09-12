@@ -221,30 +221,146 @@ body {
   box-shadow: var(--shadow-card-rich);
   border-color: color-mix(in srgb, var(--color-neon) 14%, var(--color-border));
 }
+/* Neon glass / HUD panel — cyber dashboard chrome (not gift-box gamification) */
+.artop-hud-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1.5px solid color-mix(in srgb, var(--color-neon) 28%, var(--color-border));
+  background:
+    linear-gradient(165deg, rgb(255 255 255 / 0.92) 0%, rgb(255 240 247 / 0.88) 55%, rgb(255 255 255 / 0.95) 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    inset 0 0 0 1px rgb(255 0 127 / 0.06),
+    0 0 0 1px rgb(255 0 127 / 0.04),
+    0 10px 28px -16px rgb(255 0 127 / 0.35),
+    0 2px 8px -4px rgb(17 17 22 / 0.08);
+  backdrop-filter: blur(10px);
+}
+.artop-hud-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(255 0 127 / 0.05) 0%, transparent 28%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgb(255 0 127 / 0.018) 3px,
+      rgb(255 0 127 / 0.018) 4px
+    );
+  opacity: 0.9;
+}
+.artop-hud-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 1;
+  border-color: var(--color-neon);
+  border-style: solid;
+  opacity: 0.7;
+}
+.artop-hud-corner-tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
+.artop-hud-corner-tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
+.artop-hud-corner-bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
+.artop-hud-corner-br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+.artop-hud-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-neon-ink);
+}
+.artop-hud-meter {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-neon) 8%, var(--color-surface-3));
+  box-shadow: inset 0 0 0 1px rgb(255 0 127 / 0.08);
+}
+.artop-hud-meter > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-neon-deep), var(--color-neon));
+  box-shadow: 0 0 10px rgb(255 0 127 / 0.45);
+}
 .artop-empieza-chip {
   background: var(--color-neon);
   color: #fff;
   border-color: var(--color-neon-deep);
-  box-shadow: var(--shadow-neon-soft);
+  box-shadow:
+    0 0 0 3px rgb(255 0 127 / 0.2),
+    0 0 24px rgb(255 0 127 / 0.55),
+    0 8px 20px -6px rgb(255 0 127 / 0.65);
 }
 .artop-path-halo {
-  background: color-mix(in srgb, var(--color-neon) 18%, transparent);
+  background: radial-gradient(
+    circle,
+    rgb(255 0 127 / 0.42) 0%,
+    rgb(255 0 127 / 0.18) 45%,
+    rgb(255 0 127 / 0.04) 70%,
+    transparent 75%
+  );
+}
+.artop-path-ring {
+  box-shadow: 0 0 0 2px rgb(255 0 127 / 0.35), 0 0 18px rgb(255 0 127 / 0.35);
 }
 @media (prefers-reduced-motion: no-preference) {
   .artop-neon-pulse {
-    animation: artop-neon-pulse 1.8s ease-in-out infinite;
+    animation: artop-neon-pulse 1.35s ease-in-out infinite;
   }
   .artop-halo-pulse {
-    animation: artop-halo-pulse 2s ease-in-out infinite;
+    animation: artop-halo-pulse 1.55s ease-in-out infinite;
+  }
+  .artop-empieza-chip {
+    animation: artop-empieza-glow 1.4s ease-in-out infinite;
+  }
+  .artop-ring-pulse {
+    animation: artop-ring-pulse 1.55s ease-in-out infinite;
   }
 }
 @keyframes artop-neon-pulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgb(255 0 127 / 0.22), 0 8px 22px -8px rgb(255 0 127 / 0.45); }
-  50% { box-shadow: 0 0 0 7px rgb(255 0 127 / 0.12), 0 12px 32px -6px rgb(255 0 127 / 0.55); }
+  0%, 100% {
+    box-shadow:
+      0 0 0 4px rgb(255 0 127 / 0.35),
+      0 0 22px rgb(255 0 127 / 0.55),
+      0 10px 28px -6px rgb(255 0 127 / 0.65);
+  }
+  50% {
+    box-shadow:
+      0 0 0 10px rgb(255 0 127 / 0.14),
+      0 0 36px rgb(255 0 127 / 0.7),
+      0 14px 36px -4px rgb(255 0 127 / 0.75);
+  }
 }
 @keyframes artop-halo-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.55; }
-  50% { transform: translate(-50%, -50%) scale(1.18); opacity: 0.22; }
+  0%, 100% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.85; }
+  50% { transform: translate(-50%, -50%) scale(1.28); opacity: 0.28; }
+}
+@keyframes artop-empieza-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px rgb(255 0 127 / 0.22),
+      0 0 20px rgb(255 0 127 / 0.5),
+      0 8px 18px -6px rgb(255 0 127 / 0.6);
+    transform: translateY(0);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgb(255 0 127 / 0.18),
+      0 0 34px rgb(255 0 127 / 0.75),
+      0 10px 24px -4px rgb(255 0 127 / 0.7);
+    transform: translateY(-3px);
+  }
+}
+@keyframes artop-ring-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+  50% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.25; }
 }
 
 /* tacto: sin resaltado gris ni retardo en móvil */

@@ -61,19 +61,23 @@ export function PathNode({
         <>
           <span
             aria-hidden
-            className="artop-halo-pulse absolute top-1/2 left-1/2 size-[96px] -translate-x-1/2 -translate-y-1/2 rounded-full artop-path-halo"
+            className="artop-halo-pulse artop-path-halo absolute top-1/2 left-1/2 size-[132px] -translate-x-1/2 -translate-y-1/2 rounded-full"
           />
           <span
             aria-hidden
-            className="absolute top-1/2 left-1/2 size-[78px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[var(--color-neon)]/35"
+            className="artop-ring-pulse artop-path-ring absolute top-1/2 left-1/2 size-[96px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[var(--color-neon)]/55"
           />
-          <span className="artop-node-pop absolute -top-[52px] left-1/2 z-10 -translate-x-1/2">
-            <span className="artop-bounce-soft artop-empieza-chip block rounded-[14px] border-b-4 px-4 py-2 font-display text-[15px] font-extrabold tracking-[0.08em] uppercase">
+          <span
+            aria-hidden
+            className="absolute top-1/2 left-1/2 size-[78px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--color-neon)]/40"
+          />
+          <span className="artop-node-pop absolute -top-[64px] left-1/2 z-10 -translate-x-1/2">
+            <span className="artop-empieza-chip block rounded-[16px] border-b-[5px] px-5 py-2.5 font-display text-[17px] font-extrabold tracking-[0.12em] uppercase">
               EMPIEZA
             </span>
             <span
               aria-hidden
-              className="mx-auto -mt-[6px] block size-3 rotate-45 border-b-2 border-r-2 border-[var(--color-neon-deep)] bg-[var(--color-neon)]"
+              className="mx-auto -mt-[7px] block size-3.5 rotate-45 border-b-[3px] border-r-[3px] border-[var(--color-neon-deep)] bg-[var(--color-neon)] shadow-[0_0_12px_rgb(255_0_127_/_0.55)]"
             />
           </span>
         </>
@@ -89,7 +93,7 @@ export function PathNode({
           available && "bg-[var(--color-surface)] border-[var(--color-border)] shadow-[var(--shadow-card)]",
           node.status === "locked" && "bg-[#ececf1] border-[#d4d4dc] text-[#9a9aa8]",
           node.status === "review" && "bg-[var(--color-neon-tint)] border-[var(--color-neon)] text-[var(--color-neon-ink)]",
-          active && "artop-complete-pop artop-neon-pulse"
+          active && "artop-complete-pop artop-neon-pulse z-[1]"
         )}
       >
         {available && (
