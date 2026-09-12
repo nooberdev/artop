@@ -3,3 +3,7 @@ node_modules/
 out/
 *.log
 .DS_Store
+# Piper TTS: binarios y voces ONNX (se descargan aparte, ver tools/piper/README.md)
+/tools/
+*.onnx
+*.onnx.json

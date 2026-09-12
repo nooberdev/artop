@@ -5,84 +5,14 @@ import Link from "next/link";
 import { useParams, useRouter, notFound } from "next/navigation";
 import { X, Check, CheckCircle, Lightning, Trophy, ArrowClockwise } from "@phosphor-icons/react";
 import { Badge, Button, Card, CardSub, CardTitle, ProgressBar } from "@/components/ui";
+import { StepView, canCheck } from "@/components/leccion/renderers";
 import { useStore } from "@/lib/store";
 import { caminoUnits } from "@/lib/camino";
+import {
+  adaptSteps, fallbackLesson, getLessonDefinition, DEMO_LESSONS, isCorrect,
+  COURSE_CAPS, type Lesson,
+} from "@/lib/lessons";
 import { cn } from "@/lib/utils";
-
-type Ex =
-  | { kind: "choice"; q: string; options: string[]; answer: number; why: string }
-  | { kind: "complete"; q: string; pre: string; post: string; options: string[]; answer: string; why: string }
-  | { kind: "tf"; q: string; answer: boolean; why: string }
-  | { kind: "order"; q: string; tokens: string[]; answer: string[]; why: string };
-
-function bank(topic: string): Ex[] {
-  return [
-    {
-      kind: "choice",
-      q: `¿Qué hace print() en "${topic}"?`,
-      options: ["Muestra texto en pantalla", "Borra la memoria", "Apaga el programa", "Crea un archivo"],
-      answer: 0,
-      why: "print() muestra valores en pantalla. Es tu ventana al programa.",
-    },
-    {
-      kind: "complete",
-      q: "Completa para guardar el número 7 en edad:",
-      pre: "edad",
-      post: "7",
-      options: ["==", "=", "->", ":"],
-      answer: "=",
-      why: "Un solo = asigna. El doble == compara.",
-    },
-    {
-      kind: "tf",
-      q: "En Python, el texto siempre va entre comillas.",
-      answer: true,
-      why: "Correcto: \"hola\" es texto; hola sin comillas sería una variable.",
-    },
-    {
-      kind: "order",
-      q: "Ordena para saludar con una variable:",
-      tokens: ["nombre", "=", "\"Ada\"", "print", "(", "nombre", ")"],
-      answer: ["nombre", "=", "\"Ada\"", "print", "(", "nombre", ")"],
-      why: "Primero guardas, después muestras.",
-    },
-    {
-      kind: "choice",
-      q: "¿Qué tipo es 3.14?",
-      options: ["int (entero)", "float (decimal)", "str (texto)", "bool (lógico)"],
-      answer: 1,
-      why: "Los decimales son float. Los enteros son int.",
-    },
-  ];
-}
-
-function isCorrect(ex: Ex, sel: unknown): boolean {
-  if (sel === null || sel === undefined) return false;
-  if (ex.kind === "choice") return sel === ex.answer;
-  if (ex.kind === "tf") return sel === ex.answer;
-  if (ex.kind === "complete") return sel === ex.answer;
-  if (ex.kind === "order") return Array.isArray(sel) && sel.join("|") === ex.answer.join("|");
-  return false;
-}
-
-function OptionButton({ selected, onClick, children, disabled }: { selected: boolean; onClick: () => void; children: React.ReactNode; disabled?: boolean }) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      aria-pressed={selected}
-      className={cn(
-        "artop-press min-h-[56px] w-full rounded-[14px] border-2 border-b-4 px-4 text-left text-[16px] font-bold",
-        selected
-          ? "bg-[var(--color-brand-tint)] border-[var(--color-brand)] text-[var(--color-text)]"
-          : "bg-[var(--color-surface)] border-[var(--color-border)] hover:bg-[var(--color-surface-3)]",
-        disabled && !selected && "opacity-70"
-      )}
-    >
-      {children}
-    </button>
-  );
-}
 
 export default function LeccionPage() {
   const params = useParams<{ id: string }>();
@@ -92,12 +22,30 @@ export default function LeccionPage() {
   const found = useMemo(() => {
     for (const u of caminoUnits) {
       const n = u.nodes.find((x) => x.id === params.id);
-      if (n) return { node: n, unit: u };
+      if (n) return { node: n, unit: u, siblings: u.nodes.map((x) => x.title) };
+    }
+    const demo = DEMO_LESSONS.find((d) => d.id === params.id);
+    if (demo) {
+      return {
+        node: { id: demo.id, title: demo.title, detail: demo.detail, xp: 10 },
+        unit: { number: 0, title: demo.course },
+        siblings: [] as string[],
+      };
     }
     return null;
   }, [params.id]);
 
-  const exercises = useMemo(() => (found ? bank(found.node.title) : []), [found]);
+  const lesson: Lesson | null = useMemo(() => {
+    if (!found) return null;
+    const def = getLessonDefinition(found.node.id);
+    if (def) {
+      const caps = COURSE_CAPS[def.course] ?? { audio: "none" as const, code: false };
+      return { ...def, steps: adaptSteps(def.steps, caps) };
+    }
+    return fallbackLesson(found.node.id, found.node.title, found.unit.title, found.siblings);
+  }, [found]);
+
+  const exercises = lesson?.steps ?? [];
   const total = exercises.length;
 
   const [step, setStep] = useState(0); // 0 = intro, 1..5 ejercicios, 6 = resultado
@@ -107,7 +55,7 @@ export default function LeccionPage() {
   const [hits, setHits] = useState(0);
   const saved = useRef(false);
 
-  if (!found) notFound();
+  if (!found || !lesson) notFound();
   const { node, unit } = found;
   const ex = step >= 1 && step <= total ? exercises[step - 1] : null;
   const xpTotal = node.xp;
@@ -122,11 +70,19 @@ export default function LeccionPage() {
   }, [step, total, hits, xpTotal, node.id, completeLesson, earnGems]);
 
   function check() {
-    if (!ex || sel === null) return;
+    if (!ex || !canCheck(ex, sel)) return;
     const good = isCorrect(ex, sel);
     setOk(good);
     setChecked(true);
     if (good) setHits((h) => h + 1);
+  }
+
+  function skip() {
+    // Saltar sin puntos (speak sin micrófono): avanza sin contar acierto ni fallo.
+    setSel(null);
+    setChecked(false);
+    setOk(false);
+    setStep((s) => s + 1);
   }
 
   function next() {
@@ -158,16 +114,26 @@ export default function LeccionPage() {
       <main className="mx-auto w-full max-w-[680px] px-4 pb-48 pt-6">
         {step === 0 && (
           <div className="artop-rise flex flex-col gap-4">
-            <Badge tone="brand">Unidad {unit.number} · {unit.title}</Badge>
+            <Badge tone="brand">Unidad {unit.number > 0 ? unit.number : "demo"} · {unit.title}</Badge>
             <h1 className="font-display text-[26px] font-extrabold tracking-tight">{node.title}</h1>
             <Card>
-              <CardTitle className="text-[17px]!">La idea en 30 segundos</CardTitle>
-              <CardSub className="mt-1.5">{node.detail} Empieza pequeño, prueba cada línea y fíjate en los mensajes: Python siempre te dice qué pasó.</CardSub>
-              <div className="mt-3 rounded-[12px] bg-[#111116] p-4 font-mono text-[14px] leading-relaxed text-[#7DD3FC] dark:bg-black" dir="ltr">
-                print("Hola, artop")
-                <br />
-                <span className="text-[#86EFAC]"># → Hola, artop</span>
-              </div>
+              <CardTitle className="text-[17px]!">{lesson.intro.heading}</CardTitle>
+              <CardSub className="mt-1.5">{lesson.intro.body}</CardSub>
+              {lesson.intro.example && (
+                <div
+                  className={cn(
+                    "mt-3 rounded-[12px] p-4 text-[14px] leading-relaxed",
+                    lesson.intro.mono
+                      ? "bg-[#111116] font-mono text-[#7DD3FC] dark:bg-black"
+                      : "bg-[var(--color-surface-3)] font-bold"
+                  )}
+                  dir="ltr"
+                >
+                  {lesson.intro.example.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </div>
+              )}
             </Card>
             <Button size="xl" fullWidth onClick={() => setStep(1)}>Empezar ejercicios</Button>
             <p className="text-center text-[13px] font-bold text-[var(--color-text-3)]">{total} ejercicios · +{xpTotal} XP en juego</p>
@@ -181,83 +147,14 @@ export default function LeccionPage() {
             </p>
             <h1 className="font-display text-[22px] font-extrabold tracking-tight">{ex.q}</h1>
 
-            {ex.kind === "choice" && (
-              <div className="grid gap-2.5">
-                {ex.options.map((o, i) => (
-                  <OptionButton key={o} selected={sel === i} disabled={checked} onClick={() => setSel(i)}>{o}</OptionButton>
-                ))}
-              </div>
-            )}
-
-            {ex.kind === "tf" && (
-              <div className="grid grid-cols-2 gap-2.5">
-                {([true, false] as const).map((v) => (
-                  <OptionButton key={String(v)} selected={sel === v} disabled={checked} onClick={() => setSel(v)}>
-                    <span className="block text-center text-[18px] font-display font-extrabold">{v ? "Verdadero" : "Falso"}</span>
-                  </OptionButton>
-                ))}
-              </div>
-            )}
-
-            {ex.kind === "complete" && (
-              <div>
-                <p className="rounded-[14px] border-2 border-[var(--color-border)] bg-[var(--color-surface)] p-4 font-mono text-[17px]" dir="ltr">
-                  {ex.pre} <span className="rounded-[8px] bg-[var(--color-brand-tint)] px-3 py-1 text-[var(--color-brand-ink)]">{(sel as string) ?? "···"}</span> {ex.post}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {ex.options.map((o) => (
-                    <button
-                      key={o}
-                      onClick={() => setSel(o)}
-                      disabled={checked}
-                      aria-pressed={sel === o}
-                      className={cn(
-                        "artop-press min-h-[48px] rounded-[12px] border-2 border-b-4 px-5 font-mono text-[16px] font-bold",
-                        sel === o ? "bg-[var(--color-brand-tint)] border-[var(--color-brand)]" : "bg-[var(--color-surface)] border-[var(--color-border)]"
-                      )}
-                    >
-                      {o}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {ex.kind === "order" && (
-              <div>
-                <p className="min-h-[56px] rounded-[14px] border-2 border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-3 font-mono text-[15px]" dir="ltr">
-                  {Array.isArray(sel) && sel.length > 0 ? (sel as string[]).join(" ") : <span className="text-[var(--color-text-3)]">Toca las piezas en orden…</span>}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {ex.tokens.map((t, i) => {
-                    const used = Array.isArray(sel) && (sel as string[]).filter((x) => x === t).length > ex.tokens.slice(0, i + 1).filter((x) => x === t).length;
-                    return (
-                      <button
-                        key={`${t}-${i}`}
-                        disabled={checked || used}
-                        onClick={() => setSel([...((sel as string[]) ?? []), t])}
-                        className={cn(
-                          "artop-press min-h-[48px] rounded-[12px] border-2 border-b-4 px-4 font-mono text-[15px] font-bold",
-                          used ? "opacity-30 bg-[var(--color-surface-3)] border-[var(--color-border)]" : "bg-[var(--color-surface)] border-[var(--color-border)]"
-                        )}
-                      >
-                        {t}
-                      </button>
-                    );
-                  })}
-                </div>
-                {!checked && Array.isArray(sel) && (sel as string[]).length > 0 && (
-                  <button onClick={() => setSel([])} className="mt-2 text-[14px] font-bold text-[var(--color-text-3)] underline">Borrar</button>
-                )}
-              </div>
-            )}
+            <StepView ex={ex} sel={sel} setSel={setSel} checked={checked} onCheck={check} onSkip={skip} />
 
             {!checked && (
               <div className="mt-2">
                 <Button
                   size="lg"
                   fullWidth
-                  disabled={sel === null || (Array.isArray(sel) && sel.length === 0)}
+                  disabled={!canCheck(ex, sel)}
                   onClick={check}
                 >
                   Comprobar

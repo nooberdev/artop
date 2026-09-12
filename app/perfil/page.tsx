@@ -109,6 +109,19 @@ function SystemGallery() {
           </div>
         </div>
       </Card>
+      <Card><CardTitle>Lecciones demo: 1 player, 3 cursos</CardTitle><CardSub className="mt-1">Mismos componentes, distinto contenido. Incluye audio Piper en Python.</CardSub>
+        <div className="mt-4 grid gap-2.5">
+          {[
+            { id: "u2n1", label: "Python · Variables (con audio)" },
+            { id: "demo-ja", label: "Japonés · Hiragana (sin audio: degradado)" },
+            { id: "demo-musica", label: "Música · Intervalos (con micrófono)" },
+          ].map((d) => (
+            <Link key={d.id} href={`/leccion/${d.id}`} className="artop-press flex min-h-[52px] items-center justify-center rounded-[14px] bg-[var(--color-surface-3)] border-2 border-[var(--color-border)] font-display text-[15px] font-extrabold hover:border-[var(--color-brand)]">
+              Probar: {d.label}
+            </Link>
+          ))}
+        </div>
+      </Card>
       <Card><CardTitle>Carga y vacío</CardTitle><div className="mt-4 grid gap-3"><Skeleton className="h-12" /><SkeletonCard /><EmptyState icon={<Package size={28} />} title="Nada por aquí todavía" body="Cuando generes tu primer curso con IA, aparecerá en este espacio." actionLabel="Crear curso" /></div></Card>
       <Divider label="Fin del sistema" />
       <Modal open={modal} onClose={() => setModal(false)} title="Lección desbloqueada"><p className="text-[15px] font-medium text-[var(--color-text-2)]">Completaste Bucles for. Se desbloqueó Funciones parte 1.</p><div className="mt-5"><Button fullWidth onClick={() => setModal(false)}>Seguir aprendiendo</Button></div></Modal>
