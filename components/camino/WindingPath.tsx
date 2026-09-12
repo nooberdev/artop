@@ -67,13 +67,13 @@ export function WindingPath({
               <div className="flex justify-center">
                 <a
                   href="#unidad-actual"
-                  className="artop-press inline-flex min-h-[52px] items-center gap-2 rounded-[14px] border-2 border-[#FF007F] bg-[var(--color-surface)] px-6 font-display text-[15px] font-extrabold tracking-wide text-[#FF007F] hover:bg-[#FF007F] hover:text-white"
+                  className="artop-press inline-flex min-h-[52px] items-center gap-2 rounded-[16px] border-2 border-b-[5px] border-[var(--color-brand)] bg-[var(--color-surface)] px-6 font-display text-[15px] font-extrabold tracking-wide text-[var(--color-brand-ink)] shadow-[var(--shadow-card)] hover:bg-[var(--color-brand-tint)]"
                 >
                   SALTAR AQUÍ <ArrowDown size={18} weight="bold" aria-hidden />
                 </a>
               </div>
             )}
-            <ol aria-label={`Nodos de ${unit.title}`} className="flex flex-col gap-4">
+            <ol aria-label={`Nodos de ${unit.title}`} className="flex flex-col gap-5">
               {unit.nodes.map((node, i) => {
                 const open = openNodeId === node.id;
                 return (
