@@ -14,10 +14,10 @@ export function CourseEmpty({ onPreview }: { onPreview: () => void }) {
         <Package size={36} weight="duotone" className="text-[var(--color-text-2)]" aria-hidden />
       </span>
       <CardTitle className="mt-4 text-[20px]!">Aún no tienes cursos</CardTitle>
-      <CardSub className="mt-1 max-w-[38ch]">Dime qué quieres aprender y la IA construye tu camino: etapas, lecciones y repasos.</CardSub>
+      <CardSub className="mt-1 max-w-[38ch]">Todavía no hay generador de IA real. Podés ver la demo de cómo se verá el progreso al crear un curso.</CardSub>
       <div className="mt-6 grid w-full gap-2.5">
         <Button size="lg" fullWidth onClick={onPreview}>
-          Crear mi primer curso
+          Probar generación demo
         </Button>
         <Button variant="secondary" size="md" fullWidth onClick={onPreview}>
           Ver cómo se genera
