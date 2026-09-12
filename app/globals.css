@@ -1,0 +1,241 @@
+@import "tailwindcss";
+
+/* artop design tokens — Tailwind v4 @theme */
+@theme {
+  /* brand (planos, sin gradientes) */
+  --color-artop-magenta: #ff007f;
+  --color-artop-violet: #7000ff;
+  --color-artop-violet-deep: #4a00a8;
+  --color-artop-violet-ink: #5b00d6;
+  --color-artop-cobalt: #00a6ff;
+  --color-artop-dark: #0d0d12;
+  --color-artop-black: #000000;
+  --color-artop-paper: #f8f9fa;
+  --color-artop-ink: #111116;
+  --color-artop-muted: #777777;
+
+  /* tintes de marca para estados activos (light). Rosa main #D300D6 */
+  --color-brand: #d300d6;
+  --color-brand-deep: #930094;
+  --color-brand-ink: #9e00a1;
+  --color-brand-tint: #fae2fb;
+
+  /* surfaces (light defaults, overridden in .dark) */
+  --color-surface: #ffffff;
+  --color-surface-2: #f8f9fa;
+  --color-surface-3: #eef0f3;
+  --color-card: #ffffff;
+  --color-border: #e8e9ef;
+  --color-text: #111116;
+  --color-text-2: #4b4b56;
+  --color-text-3: #777777;
+
+  /* fonts */
+  --font-display: "Plus Jakarta Sans", "Outfit", system-ui, sans-serif;
+  --font-body: "Outfit", "Inter", system-ui, sans-serif;
+
+  /* radius */
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 999px;
+
+  /* motion */
+  --duration-fast: 200ms;
+  --duration-base: 250ms;
+  --duration-slow: 300ms;
+  --ease-artop: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* breakpoints (approx per brief) */
+  --breakpoint-xs: 400px;
+  --breakpoint-xsm: 426px;
+  --breakpoint-sm: 550px;
+  --breakpoint-md: 769px;
+  --breakpoint-mdl: 890px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* shadows neutras */
+  --shadow-card: 0 1px 2px rgb(17 17 22 / 0.06), 0 8px 24px -16px rgb(17 17 22 / 0.25);
+  --shadow-pop: 0 12px 32px -16px rgb(17 17 22 / 0.35), 0 4px 12px -6px rgb(17 17 22 / 0.15);
+}
+
+/* Dark theme overrides via .dark class */
+.dark {
+  --color-surface: #0d0d12;
+  --color-surface-2: #14141c;
+  --color-surface-3: #181820;
+  --color-card: #181820;
+  --color-border: #26262f;
+  --color-text: #f4f4f8;
+  --color-text-2: #c2c2cf;
+  --color-text-3: #9a9aa8;
+  --color-brand: #ee4def;
+  --color-brand-deep: #a200a6;
+  --color-brand-ink: #f487f4;
+  --color-brand-tint: #331233;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.5), 0 12px 32px -16px rgb(0 0 0 / 0.7);
+  --shadow-pop: 0 12px 36px -12px rgb(0 0 0 / 0.7), 0 4px 16px -6px rgb(0 0 0 / 0.5);
+}
+
+:root {
+  color-scheme: light;
+}
+.dark {
+  color-scheme: dark;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  transition: background-color var(--duration-base) var(--ease-artop), color var(--duration-base) var(--ease-artop);
+}
+
+/* color sólido de marca para texto destacado (plano, sin gradientes) */
+.artop-brand-text {
+  color: var(--color-brand-ink);
+}
+.dark .artop-brand-text {
+  color: var(--color-brand-ink);
+}
+
+/* focus visible — always obvious, 3px */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-artop-cobalt);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+.dark :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline-color: #4cc3ff;
+}
+
+/* motion defaults */
+@media (prefers-reduced-motion: no-preference) {
+  .artop-press {
+    transition: transform var(--duration-fast) var(--ease-artop), box-shadow var(--duration-base) var(--ease-artop), background-color var(--duration-fast) ease, border-color var(--duration-fast) ease, opacity var(--duration-fast) ease;
+  }
+  .artop-press:active {
+    transform: translateY(1px) scale(0.98);
+  }
+  .artop-rise {
+    animation: artop-rise var(--duration-slow) var(--ease-artop) both;
+  }
+  .artop-progress-fill {
+    transition: width var(--duration-slow) var(--ease-artop);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .artop-press, .artop-rise, .artop-progress-fill, * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes artop-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* skeleton: pulso plano, sin gradientes */
+@media (prefers-reduced-motion: no-preference) {
+  .artop-shimmer {
+    animation: artop-pulse 1.6s ease-in-out infinite;
+  }
+}
+@keyframes artop-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* scrollbar subtle */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c9cad2 transparent;
+}
+.dark * {
+  scrollbar-color: #3a3a46 transparent;
+}
+
+/* selection in brand */
+::selection {
+  background: #7000ff;
+  color: white;
+}
+
+/* microinteracciones del path (planas, sutiles) */
+@media (prefers-reduced-motion: no-preference) {
+  .artop-node-pop {
+    animation: artop-node-pop 300ms var(--ease-artop) both;
+  }
+  .artop-complete-pop {
+    animation: artop-complete-pop 350ms var(--ease-artop) both;
+  }
+  .artop-sparkle {
+    animation: artop-sparkle 900ms ease-in-out infinite;
+  }
+  .artop-breathe {
+    animation: artop-breathe 2.2s ease-in-out infinite;
+  }
+  .artop-bounce-soft {
+    animation: artop-bounce-soft 1.6s ease-in-out infinite;
+  }
+  .artop-flicker {
+    animation: artop-flicker 1.4s ease-in-out infinite;
+    transform-origin: 50% 90%;
+  }
+  .artop-pop-key {
+    animation: artop-complete-pop 350ms var(--ease-artop) both;
+  }
+  .artop-pulse {
+    animation: artop-pulse 1.6s ease-in-out infinite;
+  }
+}
+@media (hover: hover) {
+  .artop-hover-lift {
+    transition: transform var(--duration-base) var(--ease-artop), box-shadow var(--duration-base) var(--ease-artop);
+  }
+  .artop-hover-lift:hover {
+    transform: translateY(-3px);
+  }
+}
+@keyframes artop-node-pop {
+  0% { transform: scale(0.85); }
+  60% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+@keyframes artop-complete-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes artop-sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.25) rotate(12deg); opacity: 0.75; }
+}
+@keyframes artop-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+@keyframes artop-bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes artop-flicker {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50% { transform: scale(1.1) rotate(2deg); }
+}
+
+/* tacto: sin resaltado gris ni retardo en móvil */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+button, a {
+  touch-action: manipulation;
+}
