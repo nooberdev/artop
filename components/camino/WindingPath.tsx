@@ -54,7 +54,7 @@ export function WindingPath({
   const activeUnitId = effective.find((u) => u.nodes.some((n) => n.status === "in-progress"))?.id;
   let jumpShown = false;
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-9">
       {effective.map((unit, ui) => {
         const showJump = unit.locked && !jumpShown;
         if (unit.locked) jumpShown = true;
@@ -67,13 +67,13 @@ export function WindingPath({
               <div className="flex justify-center">
                 <a
                   href="#unidad-actual"
-                  className="artop-press inline-flex min-h-[52px] items-center gap-2 rounded-[14px] border-2 border-[#FF007F] bg-[var(--color-surface)] px-6 font-display text-[15px] font-extrabold tracking-wide text-[#FF007F] hover:bg-[#FF007F] hover:text-white"
+                  className="artop-press inline-flex min-h-[52px] items-center gap-2 rounded-[16px] border-b-4 border-[var(--color-neon-deep)] bg-[var(--color-neon)] px-6 font-display text-[15px] font-extrabold tracking-[0.06em] text-white shadow-[var(--shadow-neon-soft)] hover:bg-[#e60072]"
                 >
                   SALTAR AQUÍ <ArrowDown size={18} weight="bold" aria-hidden />
                 </a>
               </div>
             )}
-            <ol aria-label={`Nodos de ${unit.title}`} className="flex flex-col gap-4">
+            <ol aria-label={`Nodos de ${unit.title}`} className="relative flex flex-col gap-5">
               {unit.nodes.map((node, i) => {
                 const open = openNodeId === node.id;
                 return (

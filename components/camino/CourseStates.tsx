@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Package, Trophy, WarningCircle, CheckCircle, Pause, Play, ArrowClockwise } from "@phosphor-icons/react";
+import {
+  Sparkle, Trophy, WarningCircle, CheckCircle, Pause, Play, ArrowClockwise, Lightning,
+} from "@phosphor-icons/react";
 import { Badge, Button, Card, CardSub, CardTitle, ProgressBar, SkeletonCard, useToast } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
@@ -9,20 +11,35 @@ export type CoursePhase = "active" | "empty" | "loading" | "completed" | "genera
 
 export function CourseEmpty({ onPreview }: { onPreview: () => void }) {
   return (
-    <Card className="artop-rise flex flex-col items-center px-6 py-8 text-center">
-      <span className="flex size-[64px] items-center justify-center rounded-[22px] bg-[var(--color-surface-3)]">
-        <Package size={36} weight="duotone" className="text-[var(--color-text-2)]" aria-hidden />
+    <Card
+      className="artop-rise artop-card-cyber relative flex flex-col items-center overflow-hidden px-6 py-10 text-center"
+    >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -top-16 left-1/2 size-56 -translate-x-1/2 rounded-full bg-[var(--color-neon-mist)]"
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-10 top-8 size-28 rounded-full bg-[var(--color-neon-tint)] opacity-70"
+      />
+      <span className="relative flex size-[72px] items-center justify-center rounded-[24px] border-2 border-[var(--color-neon)]/30 bg-[var(--color-neon-tint)] shadow-[var(--shadow-neon-soft)]">
+        <Sparkle size={38} weight="fill" className="text-[var(--color-neon)]" aria-hidden />
       </span>
-      <CardTitle className="mt-4 text-[20px]!">Aún no tienes cursos</CardTitle>
-      <CardSub className="mt-1 max-w-[38ch]">Todavía no hay generador de IA real. Podés ver la demo de cómo se verá el progreso al crear un curso.</CardSub>
-      <div className="mt-6 grid w-full gap-2.5">
-        <Button size="lg" fullWidth onClick={onPreview}>
+      <CardTitle className="relative mt-5 text-[22px]! tracking-tight">Aún no tienes cursos</CardTitle>
+      <CardSub className="relative mt-2 max-w-[40ch]">
+        Todavía no hay generador de IA real. Podés ver la demo de cómo se verá el progreso al crear un curso.
+      </CardSub>
+      <div className="relative mt-7 grid w-full gap-2.5">
+        <Button size="lg" fullWidth onClick={onPreview} className="bg-[var(--color-neon)] border-[var(--color-neon-deep)] hover:bg-[#e60072]">
           Probar generación demo
         </Button>
-        <Button variant="secondary" size="md" fullWidth onClick={onPreview}>
+        <Button variant="outline" size="md" fullWidth onClick={onPreview} className="border-[var(--color-neon)]/40 text-[var(--color-neon-ink)] hover:border-[var(--color-neon)]">
           Ver cómo se genera
         </Button>
       </div>
+      <p className="relative mt-4 text-[12px] font-bold uppercase tracking-[0.14em] text-[var(--color-text-3)]">
+        Demo · sin IA real
+      </p>
     </Card>
   );
 }
@@ -39,8 +56,8 @@ export function CourseLoading() {
 export function CourseCompleted({ onReview }: { onReview: () => void }) {
   const { push } = useToast();
   return (
-    <Card accentBorder className="artop-rise flex flex-col items-center px-6 py-8 text-center">
-      <span className="artop-complete-pop flex size-[76px] items-center justify-center rounded-full bg-[#FEF3C7] ">
+    <Card accentBorder className="artop-rise artop-card-cyber flex flex-col items-center px-6 py-8 text-center">
+      <span className="artop-complete-pop flex size-[80px] items-center justify-center rounded-full bg-[#FEF3C7] shadow-[0_8px_24px_-8px_rgb(234_179_8_/_0.55)]">
         <Trophy size={46} weight="fill" className="text-[#EAB308]" aria-hidden />
       </span>
       <CardTitle className="mt-4 text-[24px]!">¡Curso completado!</CardTitle>
@@ -86,50 +103,82 @@ export function GenerationCard({ initialPaused = false }: { initialPaused?: bool
   };
   const remaining = gen.total - gen.done;
   return (
-    <Card accentBorder className="artop-rise">
-      <div className="flex items-center justify-between gap-3">
-        <Badge tone={paused ? "warning" : "info"}>
-          <span aria-hidden className={cn("size-2 rounded-full", paused ? "bg-[#B45309]" : "bg-[#0284C7] artop-pulse")} />
+    <Card className="artop-rise artop-card-cyber relative overflow-hidden border-2 border-[var(--color-neon)]/35">
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-8 -top-8 size-36 rounded-full bg-[var(--color-neon-mist)]"
+      />
+      <div className="relative flex items-center justify-between gap-3">
+        <Badge
+          tone={paused ? "warning" : "brand"}
+          className={paused ? undefined : "bg-[var(--color-neon)] border-transparent"}
+        >
+          <span
+            aria-hidden
+            className={cn(
+              "size-2 rounded-full",
+              paused ? "bg-[#B45309]" : "bg-white artop-pulse"
+            )}
+          />
           {paused ? "Pausado" : "Generando"}
         </Badge>
-        <span className="text-[13px] font-extrabold text-[var(--color-text-3)]">{gen.done} / {gen.total} lecciones</span>
+        <span className="inline-flex items-center gap-1.5 text-[13px] font-extrabold text-[var(--color-neon-ink)]">
+          <Lightning size={14} weight="fill" aria-hidden />
+          {gen.done} / {gen.total} lecciones
+        </span>
       </div>
-      <CardTitle className="mt-3 text-[20px]!">Generando tu curso</CardTitle>
-      <CardSub>{gen.course} · {paused ? "En pausa" : gen.stage}</CardSub>
-      <div className="mt-4">
+      <CardTitle className="relative mt-3 text-[22px]!">Generando tu curso</CardTitle>
+      <CardSub className="relative">{gen.course} · {paused ? "En pausa" : gen.stage}</CardSub>
+      <div className="relative mt-4">
         <ProgressBar value={gen.done} max={gen.total} size="md" />
       </div>
-      <ul className="mt-4 flex flex-col gap-2">
+      <ul className="relative mt-4 flex flex-col gap-2">
         {gen.batches.map((b) => (
           <li
             key={b.name}
-            className="flex min-h-[48px] items-center gap-3 rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 text-[14px] font-bold"
+            className={cn(
+              "flex min-h-[52px] items-center gap-3 rounded-[14px] border px-4 text-[14px] font-bold",
+              b.state === "doing" && !paused
+                ? "border-[var(--color-neon)]/40 bg-[var(--color-neon-mist)]"
+                : "border-[var(--color-border)] bg-[var(--color-surface)]"
+            )}
           >
             {b.state === "done" ? (
               <CheckCircle size={20} weight="fill" className="text-[#16A34A]" aria-hidden />
             ) : b.state === "doing" && !paused ? (
-              <span aria-hidden className="artop-breathe flex size-[20px] items-center justify-center rounded-full bg-[var(--color-brand)]" />
+              <span
+                aria-hidden
+                className="artop-breathe flex size-[20px] items-center justify-center rounded-full bg-[var(--color-neon)] shadow-[0_0_12px_rgb(255_0_127_/_0.45)]"
+              />
             ) : (
               <span aria-hidden className="size-[20px] rounded-full border-2 border-[var(--color-border)]" />
             )}
-            <span className={b.state === "queued" || paused && b.state === "doing" ? "text-[var(--color-text-3)]" : ""}>{b.name}</span>
+            <span className={b.state === "queued" || (paused && b.state === "doing") ? "text-[var(--color-text-3)]" : ""}>
+              {b.name}
+            </span>
             <span className="ml-auto text-[12px] font-extrabold uppercase tracking-wide text-[var(--color-text-3)]">
               {b.state === "done" ? "Lista" : b.state === "doing" ? (paused ? "En pausa" : "En curso") : "En cola"}
             </span>
           </li>
         ))}
       </ul>
-      <p className="mt-3 text-[13px] font-bold text-[var(--color-text-2)]">
-        {remaining === 0 ? "Terminando los últimos detalles." : `Faltan ${remaining} lecciones. Puedes seguir explorando mientras tanto.`}
+      <p className="relative mt-3 text-[13px] font-bold text-[var(--color-text-2)]">
+        {remaining === 0
+          ? "Terminando los últimos detalles."
+          : `Faltan ${remaining} lecciones. Puedes seguir explorando mientras tanto.`}
       </p>
-      <div className="mt-4 grid gap-2.5">
+      <div className="relative mt-4 grid gap-2.5">
         <Button
           variant="secondary"
           size="md"
           fullWidth
           onClick={() => {
             setPaused((p) => !p);
-            push(paused ? { title: "Generación reanudada", body: gen.stage, tone: "info" } : { title: "Generación pausada", body: "Retomamos cuando quieras.", tone: "info" });
+            push(
+              paused
+                ? { title: "Generación reanudada", body: gen.stage, tone: "info" }
+                : { title: "Generación pausada", body: "Retomamos cuando quieras.", tone: "info" }
+            );
           }}
         >
           {paused ? <><Play size={18} weight="fill" /> Reanudar</> : <><Pause size={18} weight="fill" /> Pausar</>}
@@ -142,11 +191,13 @@ export function GenerationCard({ initialPaused = false }: { initialPaused?: bool
 export function CourseError({ onRetry }: { onRetry: () => void }) {
   return (
     <Card className="artop-rise flex flex-col items-center px-6 py-8 text-center">
-      <span className="flex size-[64px] items-center justify-center rounded-[22px] bg-[#FEE2E2] ">
+      <span className="flex size-[64px] items-center justify-center rounded-[22px] bg-[#FEE2E2]">
         <WarningCircle size={38} weight="fill" className="text-[#DC2626]" aria-hidden />
       </span>
       <CardTitle className="mt-4 text-[20px]!">Algo se atascó</CardTitle>
-      <CardSub className="mt-1 max-w-[38ch]">No pudimos cargar tu camino. Revisa tu conexión e inténtalo de nuevo. Tu progreso está a salvo.</CardSub>
+      <CardSub className="mt-1 max-w-[38ch]">
+        No pudimos cargar tu camino. Revisa tu conexión e inténtalo de nuevo. Tu progreso está a salvo.
+      </CardSub>
       <div className="mt-6 grid w-full gap-2.5">
         <Button size="lg" fullWidth onClick={onRetry}>
           <ArrowClockwise size={20} weight="bold" /> Reintentar

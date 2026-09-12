@@ -59,6 +59,16 @@
   /* shadows neutras */
   --shadow-card: 0 1px 2px rgb(17 17 22 / 0.06), 0 8px 24px -16px rgb(17 17 22 / 0.25);
   --shadow-pop: 0 12px 32px -16px rgb(17 17 22 / 0.35), 0 4px 12px -6px rgb(17 17 22 / 0.15);
+
+  /* cyber-pop accents (camino / game surfaces) — neon magenta, light-only */
+  --color-neon: #ff007f;
+  --color-neon-deep: #c40063;
+  --color-neon-ink: #a10052;
+  --color-neon-tint: #ffe5f2;
+  --color-neon-mist: #fff0f7;
+  --shadow-neon: 0 0 0 4px rgb(255 0 127 / 0.16), 0 10px 28px -10px rgb(255 0 127 / 0.55);
+  --shadow-neon-soft: 0 8px 28px -12px rgb(255 0 127 / 0.35), 0 2px 8px -4px rgb(255 0 127 / 0.2);
+  --shadow-card-rich: 0 2px 4px rgb(17 17 22 / 0.04), 0 12px 32px -18px rgb(17 17 22 / 0.28), 0 0 0 1px rgb(255 0 127 / 0.04);
 }
 
 :root {
@@ -200,6 +210,41 @@ body {
 @keyframes artop-flicker {
   0%, 100% { transform: scale(1) rotate(-2deg); }
   50% { transform: scale(1.1) rotate(2deg); }
+}
+
+
+/* ── cyber-pop / camino game accents (light-only) ── */
+.artop-neon-glow {
+  box-shadow: var(--shadow-neon);
+}
+.artop-card-cyber {
+  box-shadow: var(--shadow-card-rich);
+  border-color: color-mix(in srgb, var(--color-neon) 14%, var(--color-border));
+}
+.artop-empieza-chip {
+  background: var(--color-neon);
+  color: #fff;
+  border-color: var(--color-neon-deep);
+  box-shadow: var(--shadow-neon-soft);
+}
+.artop-path-halo {
+  background: color-mix(in srgb, var(--color-neon) 18%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .artop-neon-pulse {
+    animation: artop-neon-pulse 1.8s ease-in-out infinite;
+  }
+  .artop-halo-pulse {
+    animation: artop-halo-pulse 2s ease-in-out infinite;
+  }
+}
+@keyframes artop-neon-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgb(255 0 127 / 0.22), 0 8px 22px -8px rgb(255 0 127 / 0.45); }
+  50% { box-shadow: 0 0 0 7px rgb(255 0 127 / 0.12), 0 12px 32px -6px rgb(255 0 127 / 0.55); }
+}
+@keyframes artop-halo-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.55; }
+  50% { transform: translate(-50%, -50%) scale(1.18); opacity: 0.22; }
 }
 
 /* tacto: sin resaltado gris ni retardo en móvil */

@@ -94,7 +94,7 @@ function CaminoInner() {
 
 export default function CaminoPage() {
   return (
-    <Suspense fallback={<div className="p-8">Cargando camino...</div>}>
+    <Suspense fallback={<div className="p-8 font-display text-[15px] font-bold text-[var(--color-text-2)]">Cargando camino…</div>}>
       <CaminoInner />
     </Suspense>
   );
